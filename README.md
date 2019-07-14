@@ -3,12 +3,11 @@
 - Trevor Hensel
 - Ryan Campbell
 
-For my term project, I'm still trying to form a group and I'm unsure on
-if it will pan out, I'm going to be creating a small racing game. Where
-the user(s) can race a small car around a race track. I would like the
-game to use graphics, but I have no previous experience with grpahics so
-I'm still unsure of exactly how I'm going to accomplish this goal in such
-a short amount of time. I will try my best to get a functioning game by
+For our term project, We are going to be creating a small racing game. Where
+the user(s) can race a small car around a race track. We would like the
+game to use graphics, but we have no previous experience with grpahics so
+we are still unsure of exactly how we going to accomplish this goal in such
+a short amount of time. We will try our best to get a functioning game by
 the end of term.
 
 This game will be a local game that will be one or two player depending
