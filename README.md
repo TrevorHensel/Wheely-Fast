@@ -1,6 +1,7 @@
 # Wheely Fast
 
 - Trevor Hensel
+- Ryan Campbell
 
 For my term project, I'm still trying to form a group and I'm unsure on
 if it will pan out, I'm going to be creating a small racing game. Where
