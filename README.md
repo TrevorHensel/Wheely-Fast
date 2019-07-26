@@ -1,8 +1,11 @@
 # Wheely Fast
 
-- Trevor Hensel     hensel@pdx.edxu
-- Ryan Campbell     cam28@pdx.edu
-- Brooks Russell    bru2@pdx.edu
+- Trevor Hensel
+    - hensel@pdx.edxu
+- Ryan Campbell     
+    - cam28@pdx.edu
+- Brooks Russell    
+    - bru2@pdx.edu
 
 For our term project, We are going to be creating a small racing game. Where
 the user(s) can race a small car around a race track. We would like the
