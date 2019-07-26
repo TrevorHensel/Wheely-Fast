@@ -5,3 +5,4 @@ authors = ["King-of-57 <henseltrevor@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+ggez = "*"
