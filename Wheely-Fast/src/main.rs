@@ -200,6 +200,9 @@ impl event::EventHandler for GameState {
             if let Some(dir) = Direction::from_keycode(keycode) {
                 //just make the direction for the next left or right input the same as
                 self.car.next_dir = Some(dir);
+            } else if keycode == KeyCode::Escape {
+                // quit app by pressing escape key
+                event::quit(_ctx);
             }
         }
 }
