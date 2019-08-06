@@ -202,8 +202,12 @@ impl event::EventHandler for GameState {
         _repeat: bool,
         ) {
             if let Some(dir) = Direction::from_keycode(keycode) {
-                //just make the direction for the next left or right input the same as
-                self.car.next_dir = Some(dir);
+                // ensures direction is not changed  unless in play mode
+                // this way the car stays in place even if arrow key is pressed before return
+                if self.play {
+                    //just make the direction for the next left or right input the same as
+                    self.car.next_dir = Some(dir);
+                }
             } else { 
                 match keycode {
                     KeyCode::Return => {
