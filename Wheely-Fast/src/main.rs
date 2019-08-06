@@ -153,6 +153,7 @@ impl Wall {
 struct GameState {
     car: Car,
     last_update: Instant,
+    play: bool, // false means menu, true means gameplay
 }
 
 //add levels, score, stop the car from going off screen
@@ -164,6 +165,7 @@ impl GameState {
         GameState {
             car: Car::new(car_pos),
             last_update: Instant::now(),
+            play: false,
         }
     }
 }
@@ -171,10 +173,12 @@ impl GameState {
 //implements the EventHandler for the GameState
 impl event::EventHandler for GameState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        //check to see if enough time has passed so we can update again.
-        if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
-            self.car.update();
-            self.last_update = Instant::now();
+        if self.play {
+            //check to see if enough time has passed so we can update again.
+            if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
+                self.car.update();
+                self.last_update = Instant::now();
+            }
         }
         Ok(())
     }
@@ -200,9 +204,18 @@ impl event::EventHandler for GameState {
             if let Some(dir) = Direction::from_keycode(keycode) {
                 //just make the direction for the next left or right input the same as
                 self.car.next_dir = Some(dir);
-            } else if keycode == KeyCode::Escape {
-                // quit app by pressing escape key
-                event::quit(_ctx);
+            } else { 
+                match keycode {
+                    KeyCode::Return => {
+                        // press return to start game
+                        self.play = true;
+                    }
+                    KeyCode::Escape => {
+                        // quit app by pressing escape key
+                        event::quit(_ctx);
+                    }
+                    _ => (), // do nothing
+                }
             }
         }
 }
