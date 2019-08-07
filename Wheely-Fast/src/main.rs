@@ -1,8 +1,11 @@
 use ggez;
 use ggez::event::{KeyCode, KeyMods};
 use ggez::graphics;
-//use ggez::nalgebra as na;
+use ggez::nalgebra::{Point2, Vector2};
+use ggez::timer;
 use ggez::{event, Context, GameResult};
+use std::env;
+use std::path;
 
 use std::time::{Duration, Instant};
 
@@ -151,6 +154,7 @@ impl Wall {
 }
 
 struct GameState {
+    spritebatch: graphics::spritebatch::SpriteBatch,
     car: Car,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
@@ -158,15 +162,21 @@ struct GameState {
 
 //add levels, score, stop the car from going off screen
 impl GameState {
-    pub fn new() -> Self {
+    pub fn new(ctx: &mut Context) -> GameResult<GameState> {
+        let image = graphics::Image::new(ctx, "/Background.png").unwrap();
+        let batch = graphics::spritebatch::SpriteBatch::new(image);
         //Put car in the middle bottom section of screen or the cars initial location on the screen.
         let car_pos = (GRID_SIZE.0 / 2, GRID_SIZE.1 - 1).into();
-    
-        GameState {
+        
+
+        let s = GameState {
+            spritebatch: batch,
             car: Car::new(car_pos),
             last_update: Instant::now(),
             play: false,
-        }
+        };
+
+        Ok(s)
     }
 }
 
@@ -189,6 +199,24 @@ impl event::EventHandler for GameState {
         graphics::clear(ctx, graphics::BLACK.into());
         //draw car
         self.car.draw(ctx)?;
+
+        let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
+        for x in 0..150 {
+            let p = graphics::DrawParam::new()
+                .dest(Point2::new(190.0, (x * -450) as f32))
+                .scale(Vector2::new(1.0, 1.0,))
+                .rotation(0.0);
+            self.spritebatch.add(p);
+        }
+        let param = graphics::DrawParam::new()
+            .dest(Point2::new(0.0, (time / 10) as f32))
+            .scale(Vector2::new(1.0, 1.0,))
+            .rotation(0.0)
+            .offset(Point2::new(0.0, 0.0));
+
+        graphics::draw(ctx, &self.spritebatch, param)?;
+        self.spritebatch.clear();
+
         graphics::present(ctx)?;
         ggez::timer::yield_now();
         Ok(())
@@ -225,10 +253,18 @@ impl event::EventHandler for GameState {
 }
 
 pub fn main() -> GameResult {
+    let resource_dir = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
+        let mut path = path::PathBuf::from(manifest_dir);
+        path.push("resources");
+        path
+    } else {
+        path::PathBuf::from("./resources")
+    };
+
     let (ctx, events_loop) = &mut ggez::ContextBuilder::new("Racing Game", "Ryan Campbell")
         .window_setup(ggez::conf::WindowSetup::default().title("Racing"))
         .window_mode(ggez::conf::WindowMode::default().dimensions(SCREEN_SIZE.0, SCREEN_SIZE.1))
         .build()?;
-    let state = &mut GameState::new();
+    let state = &mut GameState::new(ctx)?;
     event::run(ctx, events_loop, state)
 }

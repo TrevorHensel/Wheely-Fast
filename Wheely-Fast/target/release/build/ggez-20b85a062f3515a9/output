@@ -1,0 +1,5 @@
+cargo:rerun-if-changed=docs/guides/GenerativeArt.md
+cargo:rerun-if-changed=docs/guides/GenerativeArt.md.skt.md
+cargo:rerun-if-changed=docs/guides/HelloGgez.md
+cargo:rerun-if-changed=docs/guides/HelloGgez.md.skt.md
+cargo:rerun-if-changed=README.md
