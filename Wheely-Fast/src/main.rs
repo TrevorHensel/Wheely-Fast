@@ -10,9 +10,9 @@ use std::path;
 use std::time::{Duration, Instant};
 
 //30x30 grid, not sure how big it should be right now this is just for testing. For not it will be 30x30
-const GRID_SIZE: (i16, i16) = (30, 20);
+const GRID_SIZE: (i16, i16) = (25, 50);
 //The number of pixels in each cell on the grid, 32x32
-const GRID_CELL_SIZE: (i16, i16) = (32, 32);
+const GRID_CELL_SIZE: (i16, i16) = (17, 17);
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
