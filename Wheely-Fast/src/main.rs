@@ -203,7 +203,7 @@ impl event::EventHandler for GameState {
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
         for x in 0..150 {
             let p = graphics::DrawParam::new()
-                .dest(Point2::new(190.0, (x * -450) as f32))
+                .dest(Point2::new(0.0, (x * -450) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0);
             self.spritebatch.add(p);
