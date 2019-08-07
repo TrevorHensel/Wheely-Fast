@@ -1,0 +1,8 @@
+[package]
+name = "spritebatch"
+version = "0.1.0"
+authors = ["King-of-57 <henseltrevor@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+ggez = "0.5.1"
