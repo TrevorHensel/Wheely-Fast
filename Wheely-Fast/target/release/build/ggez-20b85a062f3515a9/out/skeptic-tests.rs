@@ -23,7 +23,7 @@ fn main() {
     event::run(ctx, event_loop, state).unwrap();
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_ggez_graphics_line_73() {
@@ -78,7 +78,7 @@ pub fn main() -> GameResult {{
     Ok(())
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_ggez_graphics_line_110() {
@@ -133,7 +133,7 @@ pub fn main() -> GameResult {{
     Ok(())
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_ggez_graphics_line_133() {
@@ -168,7 +168,7 @@ pub fn main() -> GameResult {{
     graphics::WHITE,
 )?;
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_ggez_graphics_line_154() {
@@ -221,7 +221,7 @@ pub fn main() -> GameResult {{
     Ok(())
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_random_shapes_line_183() {
@@ -254,7 +254,7 @@ fn main() {{
     shapes: Vec<Shape>,
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_random_shapes_line_194() {
@@ -288,7 +288,7 @@ fn main() {{
     Rectangle(graphics::Rect),
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_random_shapes_line_203() {
@@ -344,7 +344,7 @@ impl event::EventHandler for State {{
     event::run(ctx, event_loop, state).unwrap();
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_random_shapes_line_229() {
@@ -404,7 +404,7 @@ pub fn main() -> GameResult {{
     Ok(())
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_random_shapes_line_268() {
@@ -436,7 +436,7 @@ fn main() {{
 "####, r####"extern crate rand;
 use rand::{thread_rng, Rng};
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_random_shapes_line_274() {
@@ -478,7 +478,7 @@ shapes.push(Shape::Circle(
     thread_rng().gen_range(0.0, 300.0),
 ));
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn generativeart_sect_random_shapes_line_295() {
@@ -526,7 +526,7 @@ for _ in 0..8 {
     }
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_59() {
@@ -546,7 +546,7 @@ fn main() {{
 }}
 "####, r####"use ggez::*;
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_83() {
@@ -575,7 +575,7 @@ impl ggez::event::EventHandler for State {
   }
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_108() {
@@ -597,7 +597,7 @@ struct State {{
     let state = &mut State { };
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_159() {
@@ -642,7 +642,7 @@ let (ref mut ctx, ref mut event_loop) = ContextBuilder::new("hello_ggez", "aweso
     .build()
     .unwrap();
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_174() {
@@ -683,7 +683,7 @@ pub fn main() -> GameResult {{
 }}
 "####, r####"event::run(ctx, event_loop, state).unwrap();
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_216() {
@@ -705,7 +705,7 @@ fn main() {{
     dt: std::time::Duration,
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_224() {
@@ -746,7 +746,7 @@ pub fn main() -> GameResult {{
 }}
 "####, r####"let state = &mut State { dt: std::time::Duration::new(0, 0) };
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_230() {
@@ -781,7 +781,7 @@ pub fn main() -> GameResult {{
     Ok(())
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn helloggez_sect_ggez_line_238() {
@@ -816,7 +816,7 @@ pub fn main() -> GameResult {{
     Ok(())
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
 #[test] fn readme_sect_examples_line_103() {
@@ -868,6 +868,6 @@ impl EventHandler for MyGame {
     }
 }
 "####);
-    skeptic::rt::compile_test(r#"/Users/trevorhensel/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/trevorhensel/Documents/PDX/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
+    skeptic::rt::compile_test(r#"/Users/Tavernetti/.cargo/registry/src/github.com-1ecc6299db9ec823/ggez-0.5.1"#, r#"/Users/Tavernetti/School/2019_Summer/CS410P/Wheely-Fast/Wheely-Fast/target/release/build/ggez-20b85a062f3515a9/out"#, r#"x86_64-apple-darwin"#, s);
 }
 
