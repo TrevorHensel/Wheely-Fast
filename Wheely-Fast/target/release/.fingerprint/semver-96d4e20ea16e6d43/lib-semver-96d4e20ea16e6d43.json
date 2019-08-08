@@ -1,1 +1,0 @@
-{"rustc":14482131511702393637,"features":"[\"default\", \"serde\"]","target":2853601631441890360,"profile":2574335274271406459,"path":1161604529046037554,"deps":[["semver-parser v0.7.0","semver_parser",5229176423427726861],["serde v1.0.98","serde",7573013051551383573]],"local":[{"Precalculated":"0.9.0"}],"rustflags":[],"metadata":8762386052474907708}

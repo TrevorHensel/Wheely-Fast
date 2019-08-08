@@ -1,1 +1,0 @@
-{"rustc":14482131511702393637,"features":"[]","target":10278351688678613846,"profile":2574335274271406459,"path":8054800112962056823,"deps":[["minimp3-sys v0.3.1","minimp3_sys",1013708925853351199],["slice-deque v0.2.4","slice_deque",9332753348993799965]],"local":[{"Precalculated":"0.3.3"}],"rustflags":[],"metadata":5392094077254427798}
