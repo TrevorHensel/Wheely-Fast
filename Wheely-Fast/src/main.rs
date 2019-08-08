@@ -154,6 +154,7 @@ impl Wall {
 }
 
 struct GameState {
+    start: graphics::Image,
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
     last_update: Instant,
@@ -163,6 +164,7 @@ struct GameState {
 //add levels, score, stop the car from going off screen
 impl GameState {
     pub fn new(ctx: &mut Context) -> GameResult<GameState> {
+        let start_img = graphics::Image::new(ctx, "/Start_Button.png").unwrap();
         let background = graphics::Image::new(ctx, "/Background.png").unwrap();
         let background_batch = graphics::spritebatch::SpriteBatch::new(background);
         //Put car in the middle bottom section of screen or the cars initial location on the screen.
@@ -170,6 +172,7 @@ impl GameState {
         
 
         let s = GameState {
+            start: start_img,
             road: background_batch,
             car: Car::new(car_pos),
             last_update: Instant::now(),
@@ -216,6 +219,9 @@ impl event::EventHandler for GameState {
 
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
+
+        let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
+        graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
@@ -264,6 +270,7 @@ pub fn main() -> GameResult {
     let (ctx, events_loop) = &mut ggez::ContextBuilder::new("Racing Game", "Ryan Campbell")
         .window_setup(ggez::conf::WindowSetup::default().title("Racing"))
         .window_mode(ggez::conf::WindowMode::default().dimensions(SCREEN_SIZE.0, SCREEN_SIZE.1))
+        .add_resource_path(resource_dir)
         .build()?;
     let state = &mut GameState::new(ctx)?;
     event::run(ctx, events_loop, state)
