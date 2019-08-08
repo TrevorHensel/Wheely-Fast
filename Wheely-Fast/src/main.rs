@@ -154,7 +154,7 @@ impl Wall {
 }
 
 struct GameState {
-    spritebatch: graphics::spritebatch::SpriteBatch,
+    road: graphics::spritebatch::SpriteBatch,
     car: Car,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
@@ -163,14 +163,14 @@ struct GameState {
 //add levels, score, stop the car from going off screen
 impl GameState {
     pub fn new(ctx: &mut Context) -> GameResult<GameState> {
-        let image = graphics::Image::new(ctx, "/Background.png").unwrap();
-        let batch = graphics::spritebatch::SpriteBatch::new(image);
+        let background = graphics::Image::new(ctx, "/Background.png").unwrap();
+        let background_batch = graphics::spritebatch::SpriteBatch::new(background);
         //Put car in the middle bottom section of screen or the cars initial location on the screen.
         let car_pos = (GRID_SIZE.0 / 2, GRID_SIZE.1 - 1).into();
         
 
         let s = GameState {
-            spritebatch: batch,
+            road: background_batch,
             car: Car::new(car_pos),
             last_update: Instant::now(),
             play: false,
@@ -206,7 +206,7 @@ impl event::EventHandler for GameState {
                 .dest(Point2::new(0.0, (x * -450) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0);
-            self.spritebatch.add(p);
+            self.road.add(p);
         }
         let param = graphics::DrawParam::new()
             .dest(Point2::new(0.0, (time / 10) as f32))
@@ -214,8 +214,8 @@ impl event::EventHandler for GameState {
             .rotation(0.0)
             .offset(Point2::new(0.0, 0.0));
 
-        graphics::draw(ctx, &self.spritebatch, param)?;
-        self.spritebatch.clear();
+        graphics::draw(ctx, &self.road, param)?;
+        self.road.clear();
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
