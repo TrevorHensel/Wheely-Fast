@@ -200,8 +200,6 @@ impl event::EventHandler for GameState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         //clear screen, can make the screens background a specific color here.
         graphics::clear(ctx, graphics::BLACK.into());
-        //draw car
-        self.car.draw(ctx)?;
 
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
         for x in 0..150 {
@@ -224,6 +222,9 @@ impl event::EventHandler for GameState {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
             graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
         }
+
+        //draw car
+        self.car.draw(ctx)?;
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
