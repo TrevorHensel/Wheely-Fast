@@ -220,8 +220,10 @@ impl event::EventHandler for GameState {
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
 
-        let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
-        graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
+        if !self.play {
+            let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
+            graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
+        }
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
