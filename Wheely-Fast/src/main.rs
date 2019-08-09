@@ -9,9 +9,9 @@ use std::path;
 
 use std::time::{Duration, Instant};
 
-//30x30 grid, not sure how big it should be right now this is just for testing. For not it will be 30x30
+//30x30 grid, not sure how big it should be right now this is just for testing. For not it will be 25x50
 const GRID_SIZE: (i16, i16) = (25, 50);
-//The number of pixels in each cell on the grid, 32x32
+//The number of pixels in each cell on the grid, 17x17
 const GRID_CELL_SIZE: (i16, i16) = (17, 17);
 
 //size of the game screen
@@ -24,6 +24,20 @@ const SCREEN_SIZE: (f32, f32) = (
 //the distance it moves every frame.
 const UPDATES_PER_SECOND: f32 = 8.0;
 const MS_PER_UPDATE: u64 = (1.0 / UPDATES_PER_SECOND * 1000.0) as u64;
+
+struct GameImages {
+    car_image: graphics::Image,
+}
+
+impl GameImages {
+    fn new(ctx: &mut Context) -> GameResult<GameImages> {
+        let car_image = graphics::Image::new(ctx, "/Car.png")?;
+
+        Ok(GameImages {
+            car_image,
+        })
+    }
+}
 
 //The directions that the car can go
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -65,8 +79,8 @@ impl GridLocation {
     //I am also not sure if I need to implement the y-axis since we do not intend for the car to move up and down right now.
     pub fn new_move(pos: GridLocation, dir: Direction) -> Self {
         match dir {
-            Direction::Left => GridLocation::new(pos.x - 1, pos.y),
-            Direction::Right => GridLocation::new(pos.x + 1, pos.y),
+            Direction::Left => GridLocation::new(pos.x - 17, pos.y),
+            Direction::Right => GridLocation::new(pos.x + 17, pos.y),
             //The up direction is used to stop the car from moving. I want to look into a way for it to stop moving on key release.GridLocation
             //maybe it will I have to test
             Direction::Up => GridLocation::new(pos.x, pos.y)
@@ -109,21 +123,18 @@ impl Car {
             next_dir: None
         }
     }
-//create walls taht the car can not touch and then maybe walls that extend that the car has to avoid.
-/*struct Wall {
-    wall: GridLocation,
-    dir: Direction,
-}
-
-impl Wall {
-    pub fn new(pos: GridLocation)
-}*/
 
     //need to implement update function that will be used every time that the game needs to be updated.
     fn update(&mut self) {
         //update the direction from the key board input
-        if self.next_dir.is_some() {
+        if self.next_dir.is_some(){
             self.dir = self.next_dir.unwrap();
+            if self.car.x == 0 && self.dir == Direction::Left {
+                self.dir = Direction::Up;
+            }
+            if self.car.x == GRID_SIZE.0 - 1 && self.dir == Direction::Right {
+                self.dir = Direction::Up;
+            }
             //if I change this to Up does the car stop?
             self.next_dir = None;
         } else {
@@ -140,20 +151,26 @@ impl Wall {
         //must eventually check for collisions here as well. maybe runnning of road too?
     }
     //Draw car
-    fn draw(&self, ctx: &mut Context) -> GameResult<()> {
-        let rectangle = graphics::Mesh::new_rectangle(
+    fn draw(&self, ctx: &mut Context, pic: &mut GameImages) -> GameResult<()> {
+        /*let rectangle = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
+            //car position
             self.car.into(), 
             //color of car
             graphics::WHITE.into(),
-        )?;
-        graphics::draw(ctx, &rectangle, (ggez::mint::Point2 {x: 0.0, y: 0.0 },))?;
-        Ok(())
+        )?;*/
+        let image = &pic.car_image;
+        let pos = self.car;
+        let drawparams = graphics::DrawParam::new()
+            .dest(Point2::new(pos.x as f32, pos.y as f32));
+
+        graphics::draw(ctx, image, drawparams)
     }
 }
 
-struct GameState {
+struct MainState {
+    pics: GameImages,
     start: graphics::Image,
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
@@ -162,8 +179,9 @@ struct GameState {
 }
 
 //add levels, score, stop the car from going off screen
-impl GameState {
-    pub fn new(ctx: &mut Context) -> GameResult<GameState> {
+impl MainState {
+    pub fn new(ctx: &mut Context) -> GameResult<MainState> {
+        let pics = GameImages::new(ctx)?;
         let start_img = graphics::Image::new(ctx, "/Start_Button.png").unwrap();
         let background = graphics::Image::new(ctx, "/Background.png").unwrap();
         let background_batch = graphics::spritebatch::SpriteBatch::new(background);
@@ -171,7 +189,8 @@ impl GameState {
         let car_pos = (GRID_SIZE.0 / 2, GRID_SIZE.1 - 1).into();
         
 
-        let s = GameState {
+        let s = MainState {
+            pics,
             start: start_img,
             road: background_batch,
             car: Car::new(car_pos),
@@ -184,7 +203,7 @@ impl GameState {
 }
 
 //implements the EventHandler for the GameState
-impl event::EventHandler for GameState {
+impl event::EventHandler for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
         if self.play {
             //check to see if enough time has passed so we can update again.
@@ -198,6 +217,7 @@ impl event::EventHandler for GameState {
 
     //render the game
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
+        let pics = &mut self.pics;
         //clear screen, can make the screens background a specific color here.
         graphics::clear(ctx, graphics::BLACK.into());
 
@@ -224,7 +244,7 @@ impl event::EventHandler for GameState {
         }
 
         //draw car
-        self.car.draw(ctx)?;
+        self.car.draw(ctx, pics)?;
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
@@ -275,6 +295,6 @@ pub fn main() -> GameResult {
         .window_mode(ggez::conf::WindowMode::default().dimensions(SCREEN_SIZE.0, SCREEN_SIZE.1))
         .add_resource_path(resource_dir)
         .build()?;
-    let state = &mut GameState::new(ctx)?;
+    let state = &mut MainState::new(ctx)?;
     event::run(ctx, events_loop, state)
 }
