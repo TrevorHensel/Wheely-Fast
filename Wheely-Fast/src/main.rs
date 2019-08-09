@@ -13,6 +13,9 @@ use std::time::{Duration, Instant};
 const GRID_SIZE: (i16, i16) = (25, 50);
 //The number of pixels in each cell on the grid, 17x17
 const GRID_CELL_SIZE: (i16, i16) = (17, 17);
+const LANE_1: (i16, i16) = (0, 0);
+const LANE_2: (i16, i16) = (0, 0);
+const LANE_3: (i16, i16) = (0, 0);
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
@@ -196,6 +199,25 @@ impl MainState {
             car: Car::new(car_pos),
             last_update: Instant::now(),
             play: false,
+        };
+
+        Ok(s)
+    }
+}
+
+struct Barrier {
+    barrier: graphics::spritebatch::SpriteBatch,
+    location: GridLocation,
+}
+
+impl Barrier {
+    pub fn new(ctx: &mut Context) -> GameResult<MainState> {
+        let image = graphics::Image::new(ctx, "/Barrier.png").unwrap();
+        let barrier_batch = graphics::spritebatch::SpriteBatch::new(image);
+
+        let s = Barrier {
+            barrier: barrier_batch,
+            location: (0, 0),
         };
 
         Ok(s)
