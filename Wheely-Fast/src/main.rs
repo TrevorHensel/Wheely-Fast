@@ -239,14 +239,12 @@ impl MainState {
 //implements the EventHandler for the GameState
 impl event::EventHandler for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        let time = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
-
         if self.play {
             //check to see if enough time has passed so we can update again.
             if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
                 self.car.update();
                 self.last_update = Instant::now();
-                self.score = time;
+                self.score = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 10.0) as u32;
             }
         }
         Ok(())
@@ -294,10 +292,10 @@ impl event::EventHandler for MainState {
         self.car.draw(ctx, pics)?;
 
         //draw score
-        let score_dest = Point2::new(SCREEN_SIZE.0 / 2.0, SCREEN_SIZE.1 / 2.0 );
+        let score_dest = Point2::new(SCREEN_SIZE.0 / 2.0, 16.0);
         let score_str = format!("Score: {}", self.score);
-        let score_display = graphics::Text::new((score_str, pics.font, 32.0));
-        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::WHITE))?;
+        let score_display = graphics::Text::new((score_str, pics.font, 30.0));
+        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?;
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
