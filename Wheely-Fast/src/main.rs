@@ -51,14 +51,17 @@ pub fn get_lane() -> f32 {
 
 struct GameImages {
     car_image: graphics::Image,
+    font: graphics::Font,
 }
 
 impl GameImages {
     fn new(ctx: &mut Context) -> GameResult<GameImages> {
         let car_image = graphics::Image::new(ctx, "/Car.png")?;
+        let font = graphics::Font::new(ctx, "/DejaVuSansMono.ttf")?;
 
         Ok(GameImages {
             car_image,
+            font,
         })
     }
 }
@@ -190,7 +193,11 @@ struct MainState {
     start: graphics::Image,
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
+<<<<<<< HEAD
     barrier: graphics::spritebatch::SpriteBatch,
+=======
+    score: i32,
+>>>>>>> c593f49fdf772a1b608f1178eaf24cd24847ab0d
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -203,16 +210,27 @@ impl MainState {
         let background = graphics::Image::new(ctx, "/Background.png").unwrap();
         let background_batch = graphics::spritebatch::SpriteBatch::new(background);
         //Put car in the middle bottom section of screen or the cars initial location on the screen.
+<<<<<<< HEAD
         let car_pos = (((GRID_SIZE.0 * GRID_CELL_SIZE.0) / 2) -28, (GRID_SIZE.1 * GRID_CELL_SIZE.1) -100).into();
         let barrier_img = graphics::Image::new(ctx, "/Barrier.png").unwrap();
         let blockage = graphics::spritebatch::SpriteBatch::new(barrier_img);
 
         let mut s = MainState {
+=======
+        let car_pos = (((GRID_SIZE.0 * GRID_CELL_SIZE.0) / 2) -28, (GRID_SIZE.1 * GRID_CELL_SIZE.1) -100).into(); 
+        
+
+        let s = MainState {
+>>>>>>> c593f49fdf772a1b608f1178eaf24cd24847ab0d
             pics,
             start: start_img,
             road: background_batch,
             car: Car::new(car_pos),
+<<<<<<< HEAD
             barrier: blockage,
+=======
+            score: 0,
+>>>>>>> c593f49fdf772a1b608f1178eaf24cd24847ab0d
             last_update: Instant::now(),
             play: false,
         };
@@ -251,6 +269,7 @@ impl event::EventHandler for MainState {
         graphics::clear(ctx, graphics::BLACK.into());
 
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
+
         for x in 0..150 {
             let p = graphics::DrawParam::new()
                 .dest(Point2::new(0.0, ((x * -450) + 600) as f32))
@@ -283,6 +302,12 @@ impl event::EventHandler for MainState {
 
         //draw car
         self.car.draw(ctx, pics)?;
+
+        //draw score
+        let score_dest = Point2::new(SCREEN_SIZE.0 / 2.0, SCREEN_SIZE.1 / 2.0 );
+        let score_str = format!("Score: {}", self.score);
+        let score_display = graphics::Text::new((score_str, pics.font, 32.0));
+        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::WHITE))?;
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
