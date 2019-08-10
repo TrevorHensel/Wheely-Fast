@@ -194,9 +194,9 @@ struct MainState {
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
     barrier: graphics::spritebatch::SpriteBatch,
-    score: u32,
+    score: u128,
     //time when player begins play
-    start_time: u32,
+    start_time: u128,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -249,7 +249,7 @@ impl event::EventHandler for MainState {
                 self.last_update = Instant::now();
 
                 //update score
-                let time = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
+                let time = timer::time_since_start(_ctx).as_millis();
                 self.score = (time - self.start_time) / 64;
             }
         }
@@ -328,7 +328,7 @@ impl event::EventHandler for MainState {
                         // press return to start game
                         if !self.play {
                             self.play = true;
-                            self.start_time = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
+                            self.start_time = timer::time_since_start(_ctx).as_millis();
                         }
                     }
                     KeyCode::Escape => {
