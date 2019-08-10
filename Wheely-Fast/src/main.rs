@@ -57,7 +57,7 @@ struct GameImages {
 impl GameImages {
     fn new(ctx: &mut Context) -> GameResult<GameImages> {
         let car_image = graphics::Image::new(ctx, "/Car.png")?;
-        let font = graphics::Font::new(ctx, "/DejaVuSansMono.ttf")?;
+        let font = graphics::Font::new(ctx, "/CommodorePixelized.ttf")?;
 
         Ok(GameImages {
             car_image,
@@ -292,7 +292,7 @@ impl event::EventHandler for MainState {
         self.car.draw(ctx, pics)?;
 
         //draw score
-        let score_dest = Point2::new(SCREEN_SIZE.0 / 2.0, 16.0);
+        let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
         let score_str = format!("Score: {}", self.score);
         let score_display = graphics::Text::new((score_str, pics.font, 30.0));
         graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?;
