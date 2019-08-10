@@ -224,7 +224,7 @@ impl MainState {
 
         for x in 0..450 {
             let i = get_lane();
-            //let i = 200.0;
+            //Generate a barrier every 200 pixels apart, where x = the nth barrier
             let j = graphics::DrawParam::new()
                 .dest(Point2::new(i, ((x * -200) as f32)))
                 .scale(Vector2::new(1.0, 1.0,))
