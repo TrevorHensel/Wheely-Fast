@@ -17,9 +17,9 @@ use rand::Rng;
 const GRID_SIZE: (i16, i16) = (25, 50);
 //The number of pixels in each cell on the grid, 17x17
 const GRID_CELL_SIZE: (i16, i16) = (17, 17);
-const LANE_1: f32 = 125.0;
-const LANE_2: f32 = 225.0;
-const LANE_3: f32 = 325.0;
+const LANE_1: f32 = 68.0;
+const LANE_2: f32 = 174.0;
+const LANE_3: f32 = 280.0;
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
