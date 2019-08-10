@@ -195,6 +195,8 @@ struct MainState {
     car: Car,
     barrier: graphics::spritebatch::SpriteBatch,
     score: u32,
+    //time when player begins play
+    start_time: u32,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -218,6 +220,7 @@ impl MainState {
             car: Car::new(car_pos),
             barrier: blockage,
             score: 0,
+            start_time: 0,
             last_update: Instant::now(),
             play: false,
         };
@@ -226,7 +229,7 @@ impl MainState {
             let i = get_lane();
             //let i = 200.0;
             let j = graphics::DrawParam::new()
-                .dest(Point2::new(i, ((x * -200) as f32)))
+                .dest(Point2::new(i, (x * -200) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0);
             s.barrier.add(j);
@@ -244,7 +247,10 @@ impl event::EventHandler for MainState {
             if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
                 self.car.update();
                 self.last_update = Instant::now();
-                self.score = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 10.0) as u32;
+
+                //update score
+                let time = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
+                self.score = (time - self.start_time) / 64;
             }
         }
         Ok(())
@@ -295,7 +301,7 @@ impl event::EventHandler for MainState {
         let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
         let score_str = format!("Score: {}", self.score);
         let score_display = graphics::Text::new((score_str, pics.font, 30.0));
-        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?;
+        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
@@ -320,7 +326,10 @@ impl event::EventHandler for MainState {
                 match keycode {
                     KeyCode::Return => {
                         // press return to start game
-                        self.play = true;
+                        if !self.play {
+                            self.play = true;
+                            self.start_time = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
+                        }
                     }
                     KeyCode::Escape => {
                         // quit app by pressing escape key
