@@ -186,11 +186,7 @@ impl MainState {
         let background = graphics::Image::new(ctx, "/Background.png").unwrap();
         let background_batch = graphics::spritebatch::SpriteBatch::new(background);
         //Put car in the middle bottom section of screen or the cars initial location on the screen.
-<<<<<<< HEAD
         let car_pos = (((GRID_SIZE.0 * GRID_CELL_SIZE.0) / 2) -28, (GRID_SIZE.1 * GRID_CELL_SIZE.1) -100).into(); 
-=======
-        let car_pos = (183, 740).into();
->>>>>>> 23b94331f95c28d973138417f3b67c498c56ae58
         
 
         let s = MainState {
