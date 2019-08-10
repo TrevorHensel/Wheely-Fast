@@ -27,14 +27,17 @@ const MS_PER_UPDATE: u64 = (1.0 / UPDATES_PER_SECOND * 1000.0) as u64;
 
 struct GameImages {
     car_image: graphics::Image,
+    font: graphics::Font,
 }
 
 impl GameImages {
     fn new(ctx: &mut Context) -> GameResult<GameImages> {
         let car_image = graphics::Image::new(ctx, "/Car.png")?;
+        let font = graphics::Font::new(ctx, "/DejaVuSansMono.ttf")?;
 
         Ok(GameImages {
             car_image,
+            font,
         })
     }
 }
@@ -174,6 +177,7 @@ struct MainState {
     start: graphics::Image,
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
+    score: i32,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -194,6 +198,7 @@ impl MainState {
             start: start_img,
             road: background_batch,
             car: Car::new(car_pos),
+            score: 0,
             last_update: Instant::now(),
             play: false,
         };
@@ -222,6 +227,7 @@ impl event::EventHandler for MainState {
         graphics::clear(ctx, graphics::BLACK.into());
 
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
+
         for x in 0..150 {
             let p = graphics::DrawParam::new()
                 .dest(Point2::new(0.0, ((x * -450) + 600) as f32))
@@ -245,6 +251,12 @@ impl event::EventHandler for MainState {
 
         //draw car
         self.car.draw(ctx, pics)?;
+
+        //draw score
+        let score_dest = Point2::new(SCREEN_SIZE.0 / 2.0, SCREEN_SIZE.1 / 2.0 );
+        let score_str = format!("Score: {}", self.score);
+        let score_display = graphics::Text::new((score_str, pics.font, 32.0));
+        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::WHITE))?;
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
