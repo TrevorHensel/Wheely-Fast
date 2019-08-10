@@ -57,7 +57,7 @@ struct GameImages {
 impl GameImages {
     fn new(ctx: &mut Context) -> GameResult<GameImages> {
         let car_image = graphics::Image::new(ctx, "/Car.png")?;
-        let font = graphics::Font::new(ctx, "/DejaVuSansMono.ttf")?;
+        let font = graphics::Font::new(ctx, "/CommodorePixelized.ttf")?;
 
         Ok(GameImages {
             car_image,
@@ -194,7 +194,9 @@ struct MainState {
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
     barrier: graphics::spritebatch::SpriteBatch,
-    score: i32,
+    score: u128,
+    //time when player begins play
+    start_time: u128,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -218,6 +220,7 @@ impl MainState {
             car: Car::new(car_pos),
             barrier: blockage,
             score: 0,
+            start_time: 0,
             last_update: Instant::now(),
             play: false,
         };
@@ -226,7 +229,7 @@ impl MainState {
             let i = get_lane();
             //Generate a barrier every 200 pixels apart, where x = the nth barrier
             let j = graphics::DrawParam::new()
-                .dest(Point2::new(i, ((x * -200) as f32)))
+                .dest(Point2::new(i, (x * -200) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0);
             s.barrier.add(j);
@@ -244,6 +247,10 @@ impl event::EventHandler for MainState {
             if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
                 self.car.update();
                 self.last_update = Instant::now();
+
+                //update score
+                let time = timer::time_since_start(_ctx).as_millis();
+                self.score = (time - self.start_time) / 64;
             }
         }
         Ok(())
@@ -291,10 +298,10 @@ impl event::EventHandler for MainState {
         self.car.draw(ctx, pics)?;
 
         //draw score
-        let score_dest = Point2::new(SCREEN_SIZE.0 / 2.0, SCREEN_SIZE.1 / 2.0 );
+        let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
         let score_str = format!("Score: {}", self.score);
-        let score_display = graphics::Text::new((score_str, pics.font, 32.0));
-        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::WHITE))?;
+        let score_display = graphics::Text::new((score_str, pics.font, 30.0));
+        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
@@ -319,7 +326,10 @@ impl event::EventHandler for MainState {
                 match keycode {
                     KeyCode::Return => {
                         // press return to start game
-                        self.play = true;
+                        if !self.play {
+                            self.play = true;
+                            self.start_time = timer::time_since_start(_ctx).as_millis();
+                        }
                     }
                     KeyCode::Escape => {
                         // quit app by pressing escape key
