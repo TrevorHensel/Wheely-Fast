@@ -176,14 +176,6 @@ impl Car {
     }
     //Draw car
     fn draw(&self, ctx: &mut Context, pic: &mut GameImages) -> GameResult<()> {
-        /*let rectangle = graphics::Mesh::new_rectangle(
-            ctx,
-            graphics::DrawMode::fill(),
-            //car position
-            self.car.into(), 
-            //color of car
-            graphics::WHITE.into(),
-        )?;*/
         let image = &pic.car_image;
         let pos = self.car;
         let drawparams = graphics::DrawParam::new()
@@ -215,7 +207,7 @@ impl MainState {
         let barrier_img = graphics::Image::new(ctx, "/Barrier.png").unwrap();
         let blockage = graphics::spritebatch::SpriteBatch::new(barrier_img);
 
-        let s = MainState {
+        let mut s = MainState {
             pics,
             start: start_img,
             road: background_batch,
@@ -224,6 +216,16 @@ impl MainState {
             last_update: Instant::now(),
             play: false,
         };
+
+        for x in 0..450 {
+            let i = get_lane();
+            //let i = 200.0;
+            let j = graphics::DrawParam::new()
+                .dest(Point2::new(i, ((x * -200) as f32)))
+                .scale(Vector2::new(1.0, 1.0,))
+                .rotation(0.0);
+            s.barrier.add(j);
+        }
 
         Ok(s)
     }
@@ -265,15 +267,6 @@ impl event::EventHandler for MainState {
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
 
-        for x in 0..450 {
-            //let i = get_lane();
-            let i = 200.0;
-            let j = graphics::DrawParam::new()
-                .dest(Point2::new(i, ((x * -200) as f32)))
-                .scale(Vector2::new(1.0, 1.0,))
-                .rotation(0.0);
-            self.barrier.add(j);
-        }
         let param2 = graphics::DrawParam::new()
             .dest(Point2::new(0.0, (time / 10) as f32))
             .scale(Vector2::new(1.0, 1.0,))
@@ -281,7 +274,7 @@ impl event::EventHandler for MainState {
             .offset(Point2::new(0.0, 0.0));
 
         graphics::draw(ctx, &self.barrier, param2)?;
-        self.barrier.clear();
+        //self.barrier.clear();
 
         if !self.play {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
