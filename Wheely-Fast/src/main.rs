@@ -194,7 +194,7 @@ struct MainState {
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
     barrier: graphics::spritebatch::SpriteBatch,
-    score: i32,
+    score: u32,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -239,11 +239,14 @@ impl MainState {
 //implements the EventHandler for the GameState
 impl event::EventHandler for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
+        let time = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
+
         if self.play {
             //check to see if enough time has passed so we can update again.
             if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
                 self.car.update();
                 self.last_update = Instant::now();
+                self.score = time;
             }
         }
         Ok(())
