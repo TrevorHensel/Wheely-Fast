@@ -1,0 +1,1 @@
+{"rustc":14482131511702393637,"features":"[]","target":13542372968290200954,"profile":2574335274271406459,"path":9876543507847441607,"deps":[["core-foundation-sys v0.6.2","core_foundation_sys",4501615532897198407],["mach v0.2.3","mach",5391663242490545324]],"local":[{"Precalculated":"0.1.0"}],"rustflags":[],"metadata":10552994340805415981}

@@ -1,3 +1,5 @@
+extern crate rand;
+
 use ggez;
 use ggez::event::{KeyCode, KeyMods};
 use ggez::graphics;
@@ -9,13 +11,15 @@ use std::path;
 
 use std::time::{Duration, Instant};
 
+use rand::Rng;
+
 //30x30 grid, not sure how big it should be right now this is just for testing. For not it will be 25x50
 const GRID_SIZE: (i16, i16) = (25, 50);
 //The number of pixels in each cell on the grid, 17x17
 const GRID_CELL_SIZE: (i16, i16) = (17, 17);
-const LANE_1: (i16, i16) = (0, 0);
-const LANE_2: (i16, i16) = (0, 0);
-const LANE_3: (i16, i16) = (0, 0);
+const LANE_1: f32 = 125.0;
+const LANE_2: f32 = 225.0;
+const LANE_3: f32 = 325.0;
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
@@ -27,6 +31,23 @@ const SCREEN_SIZE: (f32, f32) = (
 //the distance it moves every frame.
 const UPDATES_PER_SECOND: f32 = 8.0;
 const MS_PER_UPDATE: u64 = (1.0 / UPDATES_PER_SECOND * 1000.0) as u64;
+
+pub fn get_lane() -> f32 {
+    let mut rng = rand::thread_rng();
+    let x: i16 = rng.gen_range(0,3);
+    if x == 0 {
+        return LANE_1;
+    }
+    else if x == 1 {
+        return LANE_2;
+    }
+    else if x == 2 {
+        return LANE_3;
+    }
+    else {
+        0.0
+    }
+}
 
 struct GameImages {
     car_image: graphics::Image,
@@ -177,6 +198,7 @@ struct MainState {
     start: graphics::Image,
     road: graphics::spritebatch::SpriteBatch,
     car: Car,
+    barrier: graphics::spritebatch::SpriteBatch,
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -189,39 +211,18 @@ impl MainState {
         let background = graphics::Image::new(ctx, "/Background.png").unwrap();
         let background_batch = graphics::spritebatch::SpriteBatch::new(background);
         //Put car in the middle bottom section of screen or the cars initial location on the screen.
-<<<<<<< HEAD
-        let car_pos = (((GRID_SIZE.0 * GRID_CELL_SIZE.0) / 2) -28, (GRID_SIZE.1 * GRID_CELL_SIZE.1) -100).into(); 
-=======
-        let car_pos = (183, 740).into();
->>>>>>> 23b94331f95c28d973138417f3b67c498c56ae58
-        
+        let car_pos = (((GRID_SIZE.0 * GRID_CELL_SIZE.0) / 2) -28, (GRID_SIZE.1 * GRID_CELL_SIZE.1) -100).into();
+        let barrier_img = graphics::Image::new(ctx, "/Barrier.png").unwrap();
+        let blockage = graphics::spritebatch::SpriteBatch::new(barrier_img);
 
         let s = MainState {
             pics,
             start: start_img,
             road: background_batch,
             car: Car::new(car_pos),
+            barrier: blockage,
             last_update: Instant::now(),
             play: false,
-        };
-
-        Ok(s)
-    }
-}
-
-struct Barrier {
-    barrier: graphics::spritebatch::SpriteBatch,
-    location: GridLocation,
-}
-
-impl Barrier {
-    pub fn new(ctx: &mut Context) -> GameResult<MainState> {
-        let image = graphics::Image::new(ctx, "/Barrier.png").unwrap();
-        let barrier_batch = graphics::spritebatch::SpriteBatch::new(image);
-
-        let s = Barrier {
-            barrier: barrier_batch,
-            location: (0, 0),
         };
 
         Ok(s)
@@ -263,6 +264,24 @@ impl event::EventHandler for MainState {
 
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
+
+        for x in 0..450 {
+            //let i = get_lane();
+            let i = 200.0;
+            let j = graphics::DrawParam::new()
+                .dest(Point2::new(i, ((x * -200) as f32)))
+                .scale(Vector2::new(1.0, 1.0,))
+                .rotation(0.0);
+            self.barrier.add(j);
+        }
+        let param2 = graphics::DrawParam::new()
+            .dest(Point2::new(0.0, (time / 10) as f32))
+            .scale(Vector2::new(1.0, 1.0,))
+            .rotation(0.0)
+            .offset(Point2::new(0.0, 0.0));
+
+        graphics::draw(ctx, &self.barrier, param2)?;
+        self.barrier.clear();
 
         if !self.play {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
