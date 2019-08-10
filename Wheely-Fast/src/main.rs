@@ -280,18 +280,19 @@ impl event::EventHandler for MainState {
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
 
-        let param2 = graphics::DrawParam::new()
-            .dest(Point2::new(0.0, (time / 10) as f32))
-            .scale(Vector2::new(1.0, 1.0,))
-            .rotation(0.0)
-            .offset(Point2::new(0.0, 0.0));
-
-        graphics::draw(ctx, &self.barrier, param2)?;
-        //self.barrier.clear();
-
         if !self.play {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
             graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
+        }
+        else {
+            let param2 = graphics::DrawParam::new()
+                .dest(Point2::new(0.0, (time / 10) as f32))
+                .scale(Vector2::new(1.0, 1.0,))
+                .rotation(0.0)
+                .offset(Point2::new(0.0, 0.0));
+
+            graphics::draw(ctx, &self.barrier, param2)?;
+            //self.barrier.clear();
         }
 
         //draw car
