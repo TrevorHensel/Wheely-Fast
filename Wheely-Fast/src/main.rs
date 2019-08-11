@@ -14,7 +14,7 @@ use std::time::{Duration, Instant};
 use rand::Rng;
 
 //30x30 grid, not sure how big it should be right now this is just for testing. For not it will be 25x50
-const GRID_SIZE: (i16, i16) = (25, 50);
+const GRID_SIZE: (i16, i16) = (25, 40);
 //The number of pixels in each cell on the grid, 17x17
 const GRID_CELL_SIZE: (i16, i16) = (17, 17);
 const LANE_1: f32 = 68.0;
@@ -30,23 +30,28 @@ const SCREEN_SIZE: (f32, f32) = (
 
 //Determines how quickly the game should update ,dont want the car to move to quickly across the screen so we can determine,
 //the distance it moves every frame.
-const UPDATES_PER_SECOND: f32 = 8.0;
+const UPDATES_PER_SECOND: f32 = 24.0;
 const MS_PER_UPDATE: u64 = (1.0 / UPDATES_PER_SECOND * 1000.0) as u64;
 
-pub fn get_lane() -> f32 {
+//The barriers can not be generated in the same lane over and over again.
+pub fn get_lane(last: i16) -> (f32, i16) {
     let mut rng = rand::thread_rng();
-    let x: i16 = rng.gen_range(0,3);
+    let mut x: i16 = rng.gen_range(0,3);
+    while x == last {
+        x = rng.gen_range(0,3);
+    }
+
     if x == 0 {
-        return LANE_1;
+        return (LANE_1, 0);
     }
     else if x == 1 {
-        return LANE_2;
+        return (LANE_2, 1);
     }
     else if x == 2 {
-        return LANE_3;
+        return (LANE_3, 2);
     }
     else {
-        0.0
+        (0.0, 4)
     }
 }
 
@@ -107,8 +112,8 @@ impl GridLocation {
     //I am also not sure if I need to implement the y-axis since we do not intend for the car to move up and down right now.
     pub fn new_move(pos: GridLocation, dir: Direction) -> Self {
         match dir {
-            Direction::Left => GridLocation::new(pos.x - 17, pos.y),
-            Direction::Right => GridLocation::new(pos.x + 17, pos.y),
+            Direction::Left => GridLocation::new(pos.x - 33, pos.y),
+            Direction::Right => GridLocation::new(pos.x + 33, pos.y),
             //The up direction is used to stop the car from moving. I want to look into a way for it to stop moving on key release.GridLocation
             //maybe it will I have to test
             Direction::Up => GridLocation::new(pos.x, pos.y)
@@ -157,10 +162,12 @@ impl Car {
         //update the direction from the key board input
         if self.next_dir.is_some(){
             self.dir = self.next_dir.unwrap();
-            if self.car.x == 0 && self.dir == Direction::Left {
+            //these two if statments bind the car from going off the road.
+            if self.car.x == 52 && self.dir == Direction::Left {
                 self.dir = Direction::Up;
             }
-            if self.car.x == GRID_SIZE.0 - 1 && self.dir == Direction::Right {
+            println!("{}", self.car.x);
+            if self.car.x == 316 && self.dir == Direction::Right {
                 self.dir = Direction::Up;
             }
             //if I change this to Up does the car stop?
@@ -169,7 +176,6 @@ impl Car {
             //makes it so the car stops after moving 1 cell in the direction of the last key press.
             self.dir = Direction::Up;
         };
-
         //Give the car a new position and direction
         let new_car_pos = GridLocation::new_move(self.car, self.dir);
         let new_car = GridLocation::new(new_car_pos.x, new_car_pos.y);
@@ -226,8 +232,11 @@ impl MainState {
             play: false,
         };
 
+        //makes it so the barriers cant be palced in the same row over and over.
+        let mut test_last = 4;
         for x in 0..450 {
-            let i = get_lane();
+            let (i, _last) = get_lane(test_last);
+            test_last = _last;
             //Generate a barrier every 200 pixels apart, where x = the nth barrier
             let j = graphics::DrawParam::new()
                 .dest(Point2::new(i, (x * -200) as f32))
@@ -265,6 +274,7 @@ impl event::EventHandler for MainState {
 
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
 
+        //draw road
         for x in 0..150 {
             let p = graphics::DrawParam::new()
                 .dest(Point2::new(0.0, ((x * -450) + 600) as f32))
