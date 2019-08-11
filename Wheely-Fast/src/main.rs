@@ -20,6 +20,7 @@ const GRID_CELL_SIZE: (i16, i16) = (17, 17);
 const LANE_1: f32 = 68.0;
 const LANE_2: f32 = 174.0;
 const LANE_3: f32 = 280.0;
+const DISTANCE: u32 = 10;
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
@@ -285,8 +286,11 @@ impl event::EventHandler for MainState {
             graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
         }
         else {
+            //let time_2 = timer::time_since_start(_ctx).as_millis();
+            //let offset_distance = (time - self.start_time as u32) / DISTANCE;
+            let offset_distance = self.start_time as u32 / DISTANCE;
             let param2 = graphics::DrawParam::new()
-                .dest(Point2::new(0.0, (time / 10) as f32))
+                .dest(Point2::new(0.0, ((time / DISTANCE) - offset_distance) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0)
                 .offset(Point2::new(0.0, 0.0));
