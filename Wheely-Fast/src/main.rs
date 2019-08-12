@@ -32,6 +32,9 @@ const DIFFICULTY: u32 = 7;
 //-200 is a good starting point
 const BARRIER_DISTANCE: i32 = -200;
 
+//Controls how fast the background and barriers speed up the further the player gets into the game
+const SPEEDUP: f32 = 0.0001;
+
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
     GRID_SIZE.0 as f32 * GRID_CELL_SIZE.0 as f32,
@@ -288,8 +291,12 @@ impl event::EventHandler for MainState {
                 .rotation(0.0);
             self.road.add(p);
         }
+        let mut speedup_calc: u32 = 0;
+        if self.play {
+            speedup_calc = ((time - self.start_time as u32).pow(2) as f32 * SPEEDUP) as u32;
+        }
         let param = graphics::DrawParam::new()
-            .dest(Point2::new(0.0, (time / DIFFICULTY) as f32))
+            .dest(Point2::new(0.0, ((time / DIFFICULTY) + speedup_calc) as f32))
             .scale(Vector2::new(1.0, 1.0,))
             .rotation(0.0)
             .offset(Point2::new(0.0, 0.0));
@@ -304,9 +311,10 @@ impl event::EventHandler for MainState {
         }
         //else start generating barriers on the screen
         else {
+            let speedup_calculation = (((time - self.start_time as u32).pow(2) as f32) * SPEEDUP) as u32;
             let offset_distance = self.start_time as u32 / DIFFICULTY;
             let param2 = graphics::DrawParam::new()
-                .dest(Point2::new(0.0, ((time / DIFFICULTY) - offset_distance) as f32))
+                .dest(Point2::new(0.0, (((time / DIFFICULTY) - offset_distance) + speedup_calculation) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0)
                 .offset(Point2::new(0.0, 0.0));
