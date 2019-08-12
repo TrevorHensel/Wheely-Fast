@@ -207,6 +207,11 @@ impl Car {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PlayState {
+    Start, Play, End
+}
+
 struct MainState {
     pics: GameImages,
     start: graphics::Image, // Start button image
@@ -216,7 +221,7 @@ struct MainState {
     score: u128,
     start_time: u128, // Time when player begins play
     last_update: Instant,
-    play: bool, // false means menu, true means gameplay
+    play: PlayState, // false means menu, true means gameplay
 }
 
 //add levels, score, stop the car from going off screen
@@ -241,7 +246,7 @@ impl MainState {
             score: 0,
             start_time: 0,
             last_update: Instant::now(),
-            play: false,
+            play: PlayState::Start,
         };
 
         //This generates 450 barriers that are each 'BARRIER_DISTANCE' away from each other and loads them
@@ -265,7 +270,7 @@ impl MainState {
 //implements the EventHandler for the GameState
 impl event::EventHandler for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        if self.play {
+        if self.play == PlayState::Play {
             //check to see if enough time has passed so we can update again.
             if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
                 self.car.update();
@@ -299,7 +304,7 @@ impl event::EventHandler for MainState {
             self.road.add(p);
         }
         let mut speedup_calc: u32 = 0;
-        if self.play {
+        if self.play == PlayState::Play{
             speedup_calc = ((time - self.start_time as u32).pow(2) as f32 * SPEEDUP) as u32;
         }
         let param = graphics::DrawParam::new()
@@ -311,12 +316,28 @@ impl event::EventHandler for MainState {
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
 
+
         //if the game isnt started display the start button
-        if !self.play {
+        if self.play == PlayState::Start {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
             graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
+            //draw exit instructions
+            let startmsg_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 * 0.7);
+            let startmsg_display = graphics::Text::new(("Press return", pics.font, 20.0));
+            graphics::draw(ctx, &startmsg_display, (startmsg_dest, 0.0, graphics::Color::new(0.0, 0.0, 1.0, 1.0)))?;
         }
         //else start generating barriers on the screen
+        else if self.play == PlayState::End {
+            //draw score
+            let score_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 / 2.0);
+            let score_str = format!("Score: {}", self.score);
+            let score_display = graphics::Text::new((score_str, pics.font, 34.0));
+            graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
+            //draw exit instructions
+            let exit_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 * 0.6);
+            let exit_display = graphics::Text::new(("Press esc to quit", pics.font, 18.0));
+            graphics::draw(ctx, &exit_display, (exit_dest, 0.0, graphics::Color::new(0.0, 1.0, 0.0, 1.0)))?;
+        }
         else {
             let speedup_calculation = (((time - self.start_time as u32).pow(2) as f32) * SPEEDUP) as u32;
             let offset_distance = self.start_time as u32 / DIFFICULTY;
@@ -327,16 +348,16 @@ impl event::EventHandler for MainState {
                 .offset(Point2::new(0.0, 0.0));
 
             graphics::draw(ctx, &self.barrier, param2)?;
+            //fraw score
+            let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
+            let score_str = format!("Score: {}", self.score);
+            let score_display = graphics::Text::new((score_str, pics.font, 30.0));
+            graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
         }
+
 
         //draw car
         self.car.draw(ctx, pics)?;
-
-        //draw score
-        let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
-        let score_str = format!("Score: {}", self.score);
-        let score_display = graphics::Text::new((score_str, pics.font, 30.0));
-        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
@@ -353,7 +374,7 @@ impl event::EventHandler for MainState {
             if let Some(dir) = Direction::from_keycode(keycode) {
                 // ensures direction is not changed  unless in play mode
                 // this way the car stays in place even if arrow key is pressed before return
-                if self.play {
+                if self.play == PlayState::Play {
                     //just make the direction for the next left or right input the same as
                     self.car.next_dir = Some(dir);
                 }
@@ -361,14 +382,19 @@ impl event::EventHandler for MainState {
                 match keycode {
                     KeyCode::Return => {
                         // press return to start game
-                        if !self.play {
-                            self.play = true;
+                        if self.play == PlayState::Start {
+                            self.play = PlayState::Play;
                             self.start_time = timer::time_since_start(_ctx).as_millis();
                         }
                     }
                     KeyCode::Escape => {
                         // quit app by pressing escape key
-                        event::quit(_ctx);
+                        if self.play == PlayState::Start || self.play == PlayState::End {
+                            event::quit(_ctx);
+                        }
+                        else {
+                            self.play = PlayState::End;
+                        }
                     }
                     _ => (), // do nothing
                 }
