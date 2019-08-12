@@ -30,10 +30,10 @@ const DIFFICULTY: u32 = 7;
 //Distance inbetween each barrier on the screen
 //must be negative
 //-200 is a good starting point
-const BARRIER_DISTANCE: i32 = -200;
+const BARRIER_DISTANCE: i32 = -300;
 
 //Controls how fast the background and barriers speed up the further the player gets into the game
-const SPEEDUP: f32 = 0.0001;
+const SPEEDUP: f32 = 0.000001;
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
