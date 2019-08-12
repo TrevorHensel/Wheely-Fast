@@ -17,10 +17,19 @@ use rand::Rng;
 const GRID_SIZE: (i16, i16) = (25, 50);
 //The number of pixels in each cell on the grid, 17x17
 const GRID_CELL_SIZE: (i16, i16) = (17, 17);
+
+//The 'x' position for each lane, for each barrier image to appear center in its' respective lane
 const LANE_1: f32 = 68.0;
 const LANE_2: f32 = 174.0;
 const LANE_3: f32 = 280.0;
-const DISTANCE: u32 = 10;
+
+//An arbitraury number that changes the speed of the background and barriers to make the game more difficult
+//4-10 are good starting points
+const DIFFICULTY: u32 = 7;
+
+//Distance inbetween each barrier on the screen
+//must be negative
+const BARRIER_DISTANCE: i32 = -200;
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
@@ -191,13 +200,12 @@ impl Car {
 
 struct MainState {
     pics: GameImages,
-    start: graphics::Image,
-    road: graphics::spritebatch::SpriteBatch,
+    start: graphics::Image, // Start button image
+    road: graphics::spritebatch::SpriteBatch, // Sprite batch of the road background image
     car: Car,
-    barrier: graphics::spritebatch::SpriteBatch,
+    barrier: graphics::spritebatch::SpriteBatch, // Sprite batch of the barrier image
     score: u128,
-    //time when player begins play
-    start_time: u128,
+    start_time: u128, // Time when player begins play
     last_update: Instant,
     play: bool, // false means menu, true means gameplay
 }
@@ -205,6 +213,7 @@ struct MainState {
 //add levels, score, stop the car from going off screen
 impl MainState {
     pub fn new(ctx: &mut Context) -> GameResult<MainState> {
+        //Initializing all the variables of MainState when a new object is created
         let pics = GameImages::new(ctx)?;
         let start_img = graphics::Image::new(ctx, "/Start_Button.png").unwrap();
         let background = graphics::Image::new(ctx, "/Background.png").unwrap();
@@ -226,11 +235,13 @@ impl MainState {
             play: false,
         };
 
+        //This generates 450 barriers that are each 'BARRIER_DISTANCE' away from each other and loads them
+        //into the barrier variable of MainState
         for x in 0..450 {
             let i = get_lane();
-            //Generate a barrier every 200 pixels apart, where x = the nth barrier
+            //Generate a barrier every 'BARRIER_DISTANCE' pixels apart, where x = the nth barrier
             let j = graphics::DrawParam::new()
-                .dest(Point2::new(i, (x * -200) as f32))
+                .dest(Point2::new(i, (x * BARRIER_DISTANCE) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0);
             s.barrier.add(j);
@@ -263,17 +274,21 @@ impl event::EventHandler for MainState {
         //clear screen, can make the screens background a specific color here.
         graphics::clear(ctx, graphics::BLACK.into());
 
+        //current time in miliseconds
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
-
+    
+        //generates 150 road images and stiches them together to create a scrolling background effect so the user
+        //thinks the car is driving on a road
         for x in 0..150 {
             let p = graphics::DrawParam::new()
+                //the y postion was calculated to get the images to stich together seemlessly
                 .dest(Point2::new(0.0, ((x * -450) + 600) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0);
             self.road.add(p);
         }
         let param = graphics::DrawParam::new()
-            .dest(Point2::new(0.0, (time / 10) as f32))
+            .dest(Point2::new(0.0, (time / DIFFICULTY) as f32))
             .scale(Vector2::new(1.0, 1.0,))
             .rotation(0.0)
             .offset(Point2::new(0.0, 0.0));
@@ -281,22 +296,21 @@ impl event::EventHandler for MainState {
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
 
+        //if the game isnt started display the start button
         if !self.play {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
             graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
         }
+        //else start generating barriers on the screen
         else {
-            //let time_2 = timer::time_since_start(_ctx).as_millis();
-            //let offset_distance = (time - self.start_time as u32) / DISTANCE;
-            let offset_distance = self.start_time as u32 / DISTANCE;
+            let offset_distance = self.start_time as u32 / DIFFICULTY;
             let param2 = graphics::DrawParam::new()
-                .dest(Point2::new(0.0, ((time / DISTANCE) - offset_distance) as f32))
+                .dest(Point2::new(0.0, ((time / DIFFICULTY) - offset_distance) as f32))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0)
                 .offset(Point2::new(0.0, 0.0));
 
             graphics::draw(ctx, &self.barrier, param2)?;
-            //self.barrier.clear();
         }
 
         //draw car
