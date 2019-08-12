@@ -29,6 +29,7 @@ const DIFFICULTY: u32 = 7;
 
 //Distance inbetween each barrier on the screen
 //must be negative
+//-200 is a good starting point
 const BARRIER_DISTANCE: i32 = -200;
 
 //size of the game screen
