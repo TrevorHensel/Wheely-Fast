@@ -288,11 +288,12 @@ impl event::EventHandler for MainState {
                 let time_x = (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
                 let speedup_calculation = (((time_x - self.start_time as u32).pow(2) as f32) * SPEEDUP) as u32;
                 let offset_distance = self.start_time as u32 / DIFFICULTY;
-                let y_position = ((time_x / DIFFICULTY) - offset_distance + speedup_calculation) as f32;
-                if  y_position % 200.0 < 5.0 || y_position % 200.0 > 195.0 {
+                let y_position = ((time_x / DIFFICULTY) - offset_distance + speedup_calculation + 600) as f32;
+                println!("Y: {}", y_position);
+                if  y_position % 200.0 < 20.0 || y_position % 200.0 > 180.0 {
                     let x_pos = self.car.car.x as f32;
-                    let lane = self.lane_queue.remove().unwrap();
-                    if (lane - x_pos) < 5.0 && (lane - x_pos) > -5.0 {
+                    let lane = self.lane_queue.peek().unwrap();
+                    if (lane - x_pos) < 35.0 && (lane - x_pos) > -35.0 {
                         self.play = PlayState::End;
                     }
 
