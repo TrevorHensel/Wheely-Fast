@@ -268,7 +268,7 @@ impl MainState {
             s.lane_queue.add(i);
             //Generate a barrier every 'BARRIER_DISTANCE' pixels apart, where x = the nth barrier
             let j = graphics::DrawParam::new()
-                .dest(Point2::new(i, (x * BARRIER_DISTANCE) as f32))
+                .dest(Point2::new(i, (x * BARRIER_DISTANCE) as f32 + 50.0))
                 .scale(Vector2::new(1.0, 1.0,))
                 .rotation(0.0);
             s.barrier.add(j);
@@ -299,11 +299,11 @@ impl event::EventHandler for MainState {
                     self.lane_queue.remove();
                     self.next_barrier_lane = 0;
                 }
-                if y_position > 450.0 && temp > 25.0 && temp < 100.0 && self.next_barrier_lane == 0 {
+                if y_position > 450.0 && temp > 25.0 && temp < 65.0 && self.next_barrier_lane == 0 {
                     self.next_barrier_lane = 1;
                 }
 
-                if temp < 70.0 || temp > 20.0 {
+                if temp < 170.0 || temp > 120.0 {
                     if y_position > 500.0 {
                         let x_pos = self.car.car.x as f32;
                         let lane = self.lane_queue.peek().unwrap();
