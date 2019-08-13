@@ -272,7 +272,7 @@ impl MainState {
         for x in 0..450 {
             let (i, _last) = get_lane(test_last);
             test_last = _last;
-            s.lane_queue.add(i);
+            s.lane_queue.add(i).ok();
             //Generate a barrier every 'BARRIER_DISTANCE' pixels apart, where x = the nth barrier
             let j = graphics::DrawParam::new()
                 .dest(Point2::new(i, (x * BARRIER_DISTANCE) as f32 + 50.0))
@@ -307,7 +307,7 @@ impl event::EventHandler for MainState {
                 let temp = y_position % 200.0;
                 if y_position > 650.0 && temp > 100.0 && temp < 155.0 && self.next_barrier_lane == 1
                 {
-                    self.lane_queue.remove();
+                    self.lane_queue.remove().ok();
                     self.next_barrier_lane = 0;
                 }
                 if y_position > 450.0 && temp > 25.0 && temp < 65.0 && self.next_barrier_lane == 0 {
