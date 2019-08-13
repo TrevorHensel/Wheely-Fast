@@ -240,7 +240,7 @@ impl MainState {
         let car_pos = (((GRID_SIZE.0 * GRID_CELL_SIZE.0) / 2) -28, (GRID_SIZE.1 * GRID_CELL_SIZE.1) -100).into();
         let barrier_img = graphics::Image::new(ctx, "/Barrier.png").unwrap();
         let blockage = graphics::spritebatch::SpriteBatch::new(barrier_img);
-        let mut q: Queue<f32> = queue![];
+        let q: Queue<f32> = queue![];
 
         let mut s = MainState {
             pics,
