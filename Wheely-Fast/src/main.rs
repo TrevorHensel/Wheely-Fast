@@ -74,14 +74,16 @@ pub fn get_lane(last: i16) -> (f32, i16) {
 struct GameImages {
     car_image: graphics::Image,
     font: graphics::Font,
+    start_img: graphics::Image,
 }
 
 impl GameImages {
     fn new(ctx: &mut Context) -> GameResult<GameImages> {
         let car_image = graphics::Image::new(ctx, "/Car.png")?;
         let font = graphics::Font::new(ctx, "/CommodorePixelized.ttf")?;
+        let start_img = graphics::Image::new(ctx, "/Start_Button.png").unwrap();
 
-        Ok(GameImages { car_image, font })
+        Ok(GameImages { car_image, font, start_img})
     }
 }
 
@@ -121,10 +123,10 @@ impl GridLocation {
     }
 
     //A helper function that takes a grid position and returns a new one after making a move in a spoecific direction.
-    //The car can potentially go off screen right now
-    //I am also not sure if I need to implement the y-axis since we do not intend for the car to move up and down right now.
     pub fn new_move(pos: GridLocation, dir: Direction) -> Self {
         match dir {
+            //These directions are based of the game screen pixels and are chosen to fit out image.
+            //These work almost perfectly for keeping the car within the yellow lines on the road.
             Direction::Left => GridLocation::new(pos.x - 33, pos.y),
             Direction::Right => GridLocation::new(pos.x + 33, pos.y),
             //The up direction is used to stop the car from moving. I want to look into a way for it to stop moving on key release.GridLocation
@@ -134,7 +136,9 @@ impl GridLocation {
     }
 }
 
-//This will fill the grid cell with a rectangle that represents our car at a specific location.
+//This will filla grid cell on our game board with the cars location. They can be used for other
+//things as well that need locations on the board. We were thinking about using for collision but
+//went another direction.
 impl From<GridLocation> for graphics::Rect {
     fn from(pos: GridLocation) -> Self {
         graphics::Rect::new_i32(
@@ -206,6 +210,7 @@ impl Car {
     }
 }
 
+//Used to determine if the game is running/ should still be running.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum PlayState {
     Start,
@@ -216,7 +221,6 @@ enum PlayState {
 //MainState creates the games variables.
 struct MainState {
     pics: GameImages,
-    start: graphics::Image,                   // Start button image
     road: graphics::spritebatch::SpriteBatch, // Sprite batch of the road background image
     car: Car,
     barrier: graphics::spritebatch::SpriteBatch, // Sprite batch of the barrier image
@@ -233,7 +237,6 @@ impl MainState {
     pub fn new(ctx: &mut Context) -> GameResult<MainState> {
         //Initializing all the variables of MainState when a new object is created
         let pics = GameImages::new(ctx)?;
-        let start_img = graphics::Image::new(ctx, "/Start_Button.png").unwrap();
         let background = graphics::Image::new(ctx, "/Background.png").unwrap();
         let background_batch = graphics::spritebatch::SpriteBatch::new(background);
         //Put car in the middle bottom section of screen or the cars initial location on the screen.
@@ -248,7 +251,6 @@ impl MainState {
 
         let mut s = MainState {
             pics,
-            start: start_img,
             road: background_batch,
             car: Car::new(car_pos),
             barrier: blockage,
@@ -367,7 +369,7 @@ impl event::EventHandler for MainState {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
             graphics::draw(
                 ctx,
-                &self.start,
+                &pics.start_img,
                 graphics::DrawParam::default().dest(start_dest),
             )?;
             //draw exit instructions

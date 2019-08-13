@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 ggez = "*"
 rand = "0.7.0"
+queues = "1.1.0"
