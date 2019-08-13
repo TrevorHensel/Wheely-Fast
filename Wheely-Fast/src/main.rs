@@ -305,7 +305,6 @@ impl event::EventHandler for MainState {
                     ((time_x / DIFFICULTY) - offset_distance + speedup_calculation) as f32;
 
                 let temp = y_position % 200.0;
-                println!("{}", temp);
                 if y_position > 650.0 && temp > 100.0 && temp < 155.0 && self.next_barrier_lane == 1
                 {
                     self.lane_queue.remove();
