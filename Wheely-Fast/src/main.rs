@@ -305,6 +305,7 @@ impl event::EventHandler for MainState {
                     ((time_x / DIFFICULTY) - offset_distance + speedup_calculation) as f32;
 
                 let temp = y_position % 200.0;
+                println!("{}", temp);
                 if y_position > 650.0 && temp > 100.0 && temp < 155.0 && self.next_barrier_lane == 1
                 {
                     self.lane_queue.remove();
@@ -316,7 +317,7 @@ impl event::EventHandler for MainState {
 
                 //if temp < 13 this is after the car passes the barrier if the value of temp is
                 //less than 13 then it hit the top of the barrier as it was passing.
-                if temp < 13.0 || temp > 120.0 {
+                if temp < 10.0 || temp > 120.0 {
                     if y_position > 500.0 {
                         let x_pos = self.car.car.x as f32;
                         let lane = self.lane_queue.peek().unwrap();
