@@ -182,7 +182,6 @@ impl Car {
         //update the direction from the key board input
         if self.next_dir.is_some() {
             self.dir = self.next_dir.unwrap();
-            println!("{}", self.car.x);
             //these two if statments bind the car from going off the road. Must be changed if car
             //movement from left to right is change so the car stays on road.
             if self.car.x == 76 && self.dir == Direction::Left {
@@ -306,6 +305,7 @@ impl event::EventHandler for MainState {
                     ((time_x / DIFFICULTY) - offset_distance + speedup_calculation) as f32;
 
                 let temp = y_position % 200.0;
+                println!("{}", temp);
                 if y_position > 650.0 && temp > 100.0 && temp < 155.0 && self.next_barrier_lane == 1
                 {
                     self.lane_queue.remove();
@@ -315,7 +315,9 @@ impl event::EventHandler for MainState {
                     self.next_barrier_lane = 1;
                 }
 
-                if temp < 140.0 || temp > 120.0 {
+                //if temp < 13 this is after the car passes the barrier if the value of temp is
+                //less than 13 then it hit the top of the barrier as it was passing.
+                if temp < 13.0 || temp > 120.0 {
                     if y_position > 500.0 {
                         let x_pos = self.car.car.x as f32;
                         let lane = self.lane_queue.peek().unwrap();
@@ -419,7 +421,7 @@ impl event::EventHandler for MainState {
                 .offset(Point2::new(0.0, 0.0));
 
             graphics::draw(ctx, &self.barrier, param2)?;
-            //fraw score
+            //draw score
             let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
             let score_str = format!("Score: {}", self.score);
             let score_display = graphics::Text::new((score_str, pics.font, 30.0));
