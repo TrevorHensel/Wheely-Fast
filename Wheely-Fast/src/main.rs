@@ -32,7 +32,10 @@ const DIFFICULTY: u32 = 7;
 //Distance inbetween each barrier on the screen
 //must be negative
 //-200 is a good starting point
-const BARRIER_DISTANCE: i32 = -300;
+
+//***NOT IMPLEMENTED YET DON'T CHANGE***
+const BARRIER_DISTANCE: i32 = -200;
+//***NOT IMPLEMENTED YET DON'T CHANGE***
 
 //Controls how fast the background and barriers speed up the further the player gets into the game
 const SPEEDUP: f32 = 0.0000025;
@@ -300,11 +303,11 @@ impl event::EventHandler for MainState {
                     self.next_barrier_lane = 1;
                 }
 
-                if  y_position % 200.0 < 20.0 || y_position % 200.0 > 180.0 {
-                    if y_position > 450.0 {
+                if temp < 70.0 || temp > 20.0 {
+                    if y_position > 500.0 {
                         let x_pos = self.car.car.x as f32;
                         let lane = self.lane_queue.peek().unwrap();
-                        if (lane - x_pos) < 35.0 && (lane - x_pos) > -35.0 {
+                        if (lane - x_pos) < 15.0 && (lane - x_pos) > -35.0 {
                             self.play = PlayState::End;
                         }
                     }
