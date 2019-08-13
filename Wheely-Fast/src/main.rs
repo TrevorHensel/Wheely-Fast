@@ -292,7 +292,6 @@ impl event::EventHandler for MainState {
                 let speedup_calculation = (((time_x - self.start_time as u32).pow(2) as f32) * SPEEDUP) as u32;
                 let offset_distance = self.start_time as u32 / DIFFICULTY;
                 let y_position = ((time_x / DIFFICULTY) - offset_distance + speedup_calculation) as f32;
-                println!("Y: {}", y_position);
     
                 let temp = y_position % 200.0;
                 if y_position > 650.0 && temp > 100.0 && temp < 155.0 && self.next_barrier_lane == 1 {
