@@ -73,6 +73,7 @@ pub fn get_lane(last: i16) -> (f32, i16) {
     }
 }
 
+//GameImages is used to load in the images used for certain parts of the game like the car.
 struct GameImages {
     car_image: graphics::Image,
     font: graphics::Font,
@@ -95,7 +96,7 @@ impl GameImages {
 enum Direction {
     Left,
     Right,
-    //I want to us Up for now to stop the car justincase it doesn't stop on its own. I have to see how it runs.
+    //Up is used to stop the car if no direction is given or if you hit the sides of the game.
     Up,
 }
 
@@ -217,6 +218,7 @@ enum PlayState {
     Start, Play, End
 }
 
+//MainState creates the games variables.
 struct MainState {
     pics: GameImages,
     start: graphics::Image, // Start button image
@@ -278,7 +280,8 @@ impl MainState {
     }
 }
 
-//implements the EventHandler for the GameState
+//implements the EventHandler for the GameState. The event handler is the main loop for the main
+//state. Any time something needs to be updated the event handler will call those functions.
 impl event::EventHandler for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
         if self.play == PlayState::Play {
@@ -401,6 +404,8 @@ impl event::EventHandler for MainState {
         Ok(())
     }
 
+    //Key down event watches for any key presses and then updates those for where the car should
+    //go.
     fn key_down_event(
         &mut self,
         _ctx: &mut Context, 
