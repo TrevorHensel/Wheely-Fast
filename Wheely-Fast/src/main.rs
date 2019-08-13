@@ -127,8 +127,8 @@ impl GridLocation {
         match dir {
             //These directions are based of the game screen pixels and are chosen to fit out image.
             //These work almost perfectly for keeping the car within the yellow lines on the road.
-            Direction::Left => GridLocation::new(pos.x - 33, pos.y),
-            Direction::Right => GridLocation::new(pos.x + 33, pos.y),
+            Direction::Left => GridLocation::new(pos.x - 108, pos.y),
+            Direction::Right => GridLocation::new(pos.x + 108, pos.y),
             //The up direction is used to stop the car from moving. I want to look into a way for it to stop moving on key release.GridLocation
             //maybe it will I have to test
             Direction::Up => GridLocation::new(pos.x, pos.y),
@@ -179,11 +179,13 @@ impl Car {
         //update the direction from the key board input
         if self.next_dir.is_some() {
             self.dir = self.next_dir.unwrap();
-            //these two if statments bind the car from going off the road.
-            if self.car.x == 52 && self.dir == Direction::Left {
+            println!("{}", self.car.x);
+            //these two if statments bind the car from going off the road. Must be changed if car
+            //movement from left to right is change so the car stays on road.
+            if self.car.x == 76 && self.dir == Direction::Left {
                 self.dir = Direction::Up;
             }
-            if self.car.x == 316 && self.dir == Direction::Right {
+            if self.car.x == 292 && self.dir == Direction::Right {
                 self.dir = Direction::Up;
             }
             //if I change this to Up does the car stop?
