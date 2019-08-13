@@ -28,4 +28,9 @@ END GAME;
 - If you want to end the game early press the esc key.
 - If you hit a barrier the game will end to exit hit the esc key.
 
+We used the GGEZ library for graphics. 
+- https://github.com/ggez/ggez
+Their repository has a lot of useful examples and explinations on how to implement
+the code to make a game.
+
 [LICENSE](./LICENSE)
