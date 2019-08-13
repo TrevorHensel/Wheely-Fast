@@ -303,7 +303,7 @@ impl event::EventHandler for MainState {
                     self.next_barrier_lane = 1;
                 }
 
-                if temp < 170.0 || temp > 120.0 {
+                if temp < 140.0 || temp > 120.0 {
                     if y_position > 500.0 {
                         let x_pos = self.car.car.x as f32;
                         let lane = self.lane_queue.peek().unwrap();
