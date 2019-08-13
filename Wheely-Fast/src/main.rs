@@ -126,7 +126,10 @@ impl GridLocation {
     pub fn new_move(pos: GridLocation, dir: Direction) -> Self {
         match dir {
             //These directions are based of the game screen pixels and are chosen to fit out image.
-            //These work almost perfectly for keeping the car within the yellow lines on the road.
+            //Made more changes to the distance the car moves left and right to help with collsion.
+            //The car moves to the middle of each lane so it hits the barrier head on instead of
+            //the sides. This is because it is hard to implement collison for the sides of the
+            //barrier.
             Direction::Left => GridLocation::new(pos.x - 108, pos.y),
             Direction::Right => GridLocation::new(pos.x + 108, pos.y),
             //The up direction is used to stop the car from moving. I want to look into a way for it to stop moving on key release.GridLocation
