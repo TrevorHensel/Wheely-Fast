@@ -1,4 +1,5 @@
 extern crate rand;
+extern crate queues;
 
 use ggez;
 use ggez::event::{KeyCode, KeyMods};
@@ -12,9 +13,10 @@ use std::path;
 use std::time::{Duration, Instant};
 
 use rand::Rng;
+use queues::*;
 
 //30x30 grid, not sure how big it should be right now this is just for testing. For not it will be 25x50
-const GRID_SIZE: (i16, i16) = (25, 50);
+const GRID_SIZE: (i16, i16) = (25, 40);
 //The number of pixels in each cell on the grid, 17x17
 const GRID_CELL_SIZE: (i16, i16) = (17, 17);
 
@@ -33,7 +35,7 @@ const DIFFICULTY: u32 = 7;
 const BARRIER_DISTANCE: i32 = -300;
 
 //Controls how fast the background and barriers speed up the further the player gets into the game
-const SPEEDUP: f32 = 0.000001;
+const SPEEDUP: f32 = 0.0000025;
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
@@ -43,23 +45,28 @@ const SCREEN_SIZE: (f32, f32) = (
 
 //Determines how quickly the game should update ,dont want the car to move to quickly across the screen so we can determine,
 //the distance it moves every frame.
-const UPDATES_PER_SECOND: f32 = 8.0;
+const UPDATES_PER_SECOND: f32 = 16.0;
 const MS_PER_UPDATE: u64 = (1.0 / UPDATES_PER_SECOND * 1000.0) as u64;
 
-pub fn get_lane() -> f32 {
+//The barriers can not be generated in the same lane over and over again.
+pub fn get_lane(last: i16) -> (f32, i16) {
     let mut rng = rand::thread_rng();
-    let x: i16 = rng.gen_range(0,3);
+    let mut x: i16 = rng.gen_range(0,3);
+    while x == last {
+        x = rng.gen_range(0,3);
+    }
+
     if x == 0 {
-        return LANE_1;
+        return (LANE_1, 0);
     }
     else if x == 1 {
-        return LANE_2;
+        return (LANE_2, 1);
     }
     else if x == 2 {
-        return LANE_3;
+        return (LANE_3, 2);
     }
     else {
-        0.0
+        (0.0, 4)
     }
 }
 
@@ -120,8 +127,8 @@ impl GridLocation {
     //I am also not sure if I need to implement the y-axis since we do not intend for the car to move up and down right now.
     pub fn new_move(pos: GridLocation, dir: Direction) -> Self {
         match dir {
-            Direction::Left => GridLocation::new(pos.x - 17, pos.y),
-            Direction::Right => GridLocation::new(pos.x + 17, pos.y),
+            Direction::Left => GridLocation::new(pos.x - 33, pos.y),
+            Direction::Right => GridLocation::new(pos.x + 33, pos.y),
             //The up direction is used to stop the car from moving. I want to look into a way for it to stop moving on key release.GridLocation
             //maybe it will I have to test
             Direction::Up => GridLocation::new(pos.x, pos.y)
@@ -170,10 +177,11 @@ impl Car {
         //update the direction from the key board input
         if self.next_dir.is_some(){
             self.dir = self.next_dir.unwrap();
-            if self.car.x == 0 && self.dir == Direction::Left {
+            //these two if statments bind the car from going off the road.
+            if self.car.x == 52 && self.dir == Direction::Left {
                 self.dir = Direction::Up;
             }
-            if self.car.x == GRID_SIZE.0 - 1 && self.dir == Direction::Right {
+            if self.car.x == 316 && self.dir == Direction::Right {
                 self.dir = Direction::Up;
             }
             //if I change this to Up does the car stop?
@@ -182,7 +190,6 @@ impl Car {
             //makes it so the car stops after moving 1 cell in the direction of the last key press.
             self.dir = Direction::Up;
         };
-
         //Give the car a new position and direction
         let new_car_pos = GridLocation::new_move(self.car, self.dir);
         let new_car = GridLocation::new(new_car_pos.x, new_car_pos.y);
@@ -202,6 +209,11 @@ impl Car {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PlayState {
+    Start, Play, End
+}
+
 struct MainState {
     pics: GameImages,
     start: graphics::Image, // Start button image
@@ -211,7 +223,9 @@ struct MainState {
     score: u128,
     start_time: u128, // Time when player begins play
     last_update: Instant,
-    play: bool, // false means menu, true means gameplay
+    play: PlayState, // false means menu, true means gameplay
+    next_barrier_lane: i16,
+    lane_queue: Queue<f32>,
 }
 
 //add levels, score, stop the car from going off screen
@@ -226,6 +240,7 @@ impl MainState {
         let car_pos = (((GRID_SIZE.0 * GRID_CELL_SIZE.0) / 2) -28, (GRID_SIZE.1 * GRID_CELL_SIZE.1) -100).into();
         let barrier_img = graphics::Image::new(ctx, "/Barrier.png").unwrap();
         let blockage = graphics::spritebatch::SpriteBatch::new(barrier_img);
+        let mut q: Queue<f32> = queue![];
 
         let mut s = MainState {
             pics,
@@ -236,13 +251,18 @@ impl MainState {
             score: 0,
             start_time: 0,
             last_update: Instant::now(),
-            play: false,
+            play: PlayState::Start,
+            next_barrier_lane: 0,
+            lane_queue: q,
         };
 
         //This generates 450 barriers that are each 'BARRIER_DISTANCE' away from each other and loads them
         //into the barrier variable of MainState
+        let mut test_last = 4;
         for x in 0..450 {
-            let i = get_lane();
+            let (i, _last)  = get_lane(test_last);
+            test_last = _last;
+            s.lane_queue.add(i);
             //Generate a barrier every 'BARRIER_DISTANCE' pixels apart, where x = the nth barrier
             let j = graphics::DrawParam::new()
                 .dest(Point2::new(i, (x * BARRIER_DISTANCE) as f32))
@@ -258,7 +278,7 @@ impl MainState {
 //implements the EventHandler for the GameState
 impl event::EventHandler for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        if self.play {
+        if self.play == PlayState::Play {
             //check to see if enough time has passed so we can update again.
             if Instant::now() - self.last_update >= Duration::from_millis(MS_PER_UPDATE) {
                 self.car.update();
@@ -292,7 +312,7 @@ impl event::EventHandler for MainState {
             self.road.add(p);
         }
         let mut speedup_calc: u32 = 0;
-        if self.play {
+        if self.play == PlayState::Play{
             speedup_calc = ((time - self.start_time as u32).pow(2) as f32 * SPEEDUP) as u32;
         }
         let param = graphics::DrawParam::new()
@@ -304,12 +324,28 @@ impl event::EventHandler for MainState {
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
 
+
         //if the game isnt started display the start button
-        if !self.play {
+        if self.play == PlayState::Start {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
             graphics::draw(ctx, &self.start, graphics::DrawParam::default().dest(start_dest))?;
+            //draw exit instructions
+            let startmsg_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 * 0.7);
+            let startmsg_display = graphics::Text::new(("Press return", pics.font, 20.0));
+            graphics::draw(ctx, &startmsg_display, (startmsg_dest, 0.0, graphics::Color::new(0.0, 0.0, 1.0, 1.0)))?;
         }
         //else start generating barriers on the screen
+        else if self.play == PlayState::End {
+            //draw score
+            let score_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 / 2.0);
+            let score_str = format!("Score: {}", self.score);
+            let score_display = graphics::Text::new((score_str, pics.font, 34.0));
+            graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
+            //draw exit instructions
+            let exit_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 * 0.6);
+            let exit_display = graphics::Text::new(("Press esc to quit", pics.font, 18.0));
+            graphics::draw(ctx, &exit_display, (exit_dest, 0.0, graphics::Color::new(0.0, 1.0, 0.0, 1.0)))?;
+        }
         else {
             let speedup_calculation = (((time - self.start_time as u32).pow(2) as f32) * SPEEDUP) as u32;
             let offset_distance = self.start_time as u32 / DIFFICULTY;
@@ -320,16 +356,16 @@ impl event::EventHandler for MainState {
                 .offset(Point2::new(0.0, 0.0));
 
             graphics::draw(ctx, &self.barrier, param2)?;
+            //fraw score
+            let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
+            let score_str = format!("Score: {}", self.score);
+            let score_display = graphics::Text::new((score_str, pics.font, 30.0));
+            graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
         }
+
 
         //draw car
         self.car.draw(ctx, pics)?;
-
-        //draw score
-        let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
-        let score_str = format!("Score: {}", self.score);
-        let score_display = graphics::Text::new((score_str, pics.font, 30.0));
-        graphics::draw(ctx, &score_display, (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)))?; //red
 
         graphics::present(ctx)?;
         ggez::timer::yield_now();
@@ -346,7 +382,7 @@ impl event::EventHandler for MainState {
             if let Some(dir) = Direction::from_keycode(keycode) {
                 // ensures direction is not changed  unless in play mode
                 // this way the car stays in place even if arrow key is pressed before return
-                if self.play {
+                if self.play == PlayState::Play {
                     //just make the direction for the next left or right input the same as
                     self.car.next_dir = Some(dir);
                 }
@@ -354,14 +390,19 @@ impl event::EventHandler for MainState {
                 match keycode {
                     KeyCode::Return => {
                         // press return to start game
-                        if !self.play {
-                            self.play = true;
+                        if self.play == PlayState::Start {
+                            self.play = PlayState::Play;
                             self.start_time = timer::time_since_start(_ctx).as_millis();
                         }
                     }
                     KeyCode::Escape => {
                         // quit app by pressing escape key
-                        event::quit(_ctx);
+                        if self.play == PlayState::Start || self.play == PlayState::End {
+                            event::quit(_ctx);
+                        }
+                        else {
+                            self.play = PlayState::End;
+                        }
                     }
                     _ => (), // do nothing
                 }
