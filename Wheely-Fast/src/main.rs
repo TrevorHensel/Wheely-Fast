@@ -38,7 +38,7 @@ const BARRIER_DISTANCE: i32 = -200;
 //***NOT IMPLEMENTED YET DON'T CHANGE***
 
 //Controls how fast the background and barriers speed up the further the player gets into the game
-const SPEEDUP: f32 = 0.0000025;
+const SPEEDUP: f32 = 0.000_002_5;
 
 //size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
@@ -60,11 +60,11 @@ pub fn get_lane(last: i16) -> (f32, i16) {
     }
 
     if x == 0 {
-        return (LANE_1, 0);
+        (LANE_1, 0)
     } else if x == 1 {
-        return (LANE_2, 1);
+        (LANE_2, 1)
     } else if x == 2 {
-        return (LANE_3, 2);
+        (LANE_3, 2)
     } else {
         (0.0, 4)
     }
@@ -83,7 +83,11 @@ impl GameImages {
         let font = graphics::Font::new(ctx, "/CommodorePixelized.ttf")?;
         let start_img = graphics::Image::new(ctx, "/Start_Button.png").unwrap();
 
-        Ok(GameImages { car_image, font, start_img})
+        Ok(GameImages {
+            car_image,
+            font,
+            start_img,
+        })
     }
 }
 
@@ -316,13 +320,11 @@ impl event::EventHandler for MainState {
 
                 //if temp < 13 this is after the car passes the barrier if the value of temp is
                 //less than 13 then it hit the top of the barrier as it was passing.
-                if temp < 10.0 || temp > 120.0 {
-                    if y_position > 500.0 {
-                        let x_pos = self.car.car.x as f32;
-                        let lane = self.lane_queue.peek().unwrap();
-                        if (lane - x_pos) < 15.0 && (lane - x_pos) > -35.0 {
-                            self.play = PlayState::End;
-                        }
+                if (temp < 10.0 || temp > 120.0) && y_position > 500.0 {
+                    let x_pos = self.car.car.x as f32;
+                    let lane = self.lane_queue.peek().unwrap();
+                    if (lane - x_pos) < 15.0 && (lane - x_pos) > -35.0 {
+                        self.play = PlayState::End;
                     }
                 }
                 //End Collision Detection
@@ -387,8 +389,8 @@ impl event::EventHandler for MainState {
                 (startmsg_dest, 0.0, graphics::Color::new(0.0, 0.0, 1.0, 1.0)),
             )?;
         }
-        //else start generating barriers on the screen
         else if self.play == PlayState::End {
+        //else start generating barriers on the screen
             //draw score
             let score_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 / 2.0);
             let score_str = format!("Score: {}", self.score);
