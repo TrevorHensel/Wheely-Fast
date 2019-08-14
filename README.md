@@ -23,6 +23,8 @@ on the road.
 START GAME:
 - To start the game simply press enter on your keyboard and then begin using the 
 left and right arrow keys to move the car.
+- Also recommened to use "cargo run --release" in order to run the game as we 
+noticed some games run better with the "--release" option.
 
 END GAME;
 - If you want to end the game early press the esc key.
