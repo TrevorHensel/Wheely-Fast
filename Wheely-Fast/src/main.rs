@@ -212,7 +212,7 @@ impl Car {
     fn draw(&self, ctx: &mut Context, pic: &mut GameImages) -> GameResult<()> {
         let image = &pic.car_image;
         let pos = self.car;
-        let drawparams = graphics::DrawParam::new().dest(Point2::new(pos.x as f32, pos.y as f32));
+        let drawparams = graphics::DrawParam::new().dest(Point2::new(f32::from(pos.x), f32::from(pos.y)));
 
         graphics::draw(ctx, image, drawparams)
     }
@@ -321,7 +321,7 @@ impl event::EventHandler for MainState {
                 //if temp < 13 this is after the car passes the barrier if the value of temp is
                 //less than 13 then it hit the top of the barrier as it was passing.
                 if (temp < 10.0 || temp > 120.0) && y_position > 500.0 {
-                    let x_pos = self.car.car.x as f32;
+                    let x_pos = f32::from(self.car.car.x);
                     let lane = self.lane_queue.peek().unwrap();
                     if (lane - x_pos) < 15.0 && (lane - x_pos) > -35.0 {
                         self.play = PlayState::End;
@@ -341,7 +341,7 @@ impl event::EventHandler for MainState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         let pics = &mut self.pics;
         //clear screen, can make the screens background a specific color here.
-        graphics::clear(ctx, graphics::BLACK.into());
+        graphics::clear(ctx, graphics::BLACK);
 
         //current time in miliseconds
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
@@ -356,10 +356,12 @@ impl event::EventHandler for MainState {
                 .rotation(0.0);
             self.road.add(p);
         }
-        let mut speedup_calc: u32 = 0;
-        if self.play == PlayState::Play {
-            speedup_calc = ((time - self.start_time as u32).pow(2) as f32 * SPEEDUP) as u32;
+        let speedup_calc = if self.play == PlayState::Play {
+            ((time - self.start_time as u32).pow(2) as f32 * SPEEDUP) as u32
         }
+        else {
+            0
+        };
         let param = graphics::DrawParam::new()
             .dest(Point2::new(
                 0.0,
