@@ -441,7 +441,7 @@ impl event::EventHandler for MainState {
                 ctx,
                 &score_display,
                 (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)),
-            )?; //Eed
+            )?; //Red
         }
 
         //Draw car
