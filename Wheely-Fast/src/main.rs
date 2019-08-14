@@ -149,10 +149,10 @@ impl GridLocation {
 impl From<GridLocation> for graphics::Rect {
     fn from(pos: GridLocation) -> Self {
         graphics::Rect::new_i32(
-            pos.x as i32 * GRID_CELL_SIZE.0 as i32,
-            pos.y as i32 * GRID_CELL_SIZE.1 as i32,
-            GRID_CELL_SIZE.0 as i32,
-            GRID_CELL_SIZE.1 as i32,
+            i32::from(pos.x) * i32::from(GRID_CELL_SIZE.0),
+            i32::from(pos.y) * i32::from(GRID_CELL_SIZE.1),
+            i32::from(GRID_CELL_SIZE.0),
+            i32::from(GRID_CELL_SIZE.1),
         )
     }
 }
@@ -212,7 +212,8 @@ impl Car {
     fn draw(&self, ctx: &mut Context, pic: &mut GameImages) -> GameResult<()> {
         let image = &pic.car_image;
         let pos = self.car;
-        let drawparams = graphics::DrawParam::new().dest(Point2::new(f32::from(pos.x), f32::from(pos.y)));
+        let drawparams =
+            graphics::DrawParam::new().dest(Point2::new(f32::from(pos.x), f32::from(pos.y)));
 
         graphics::draw(ctx, image, drawparams)
     }
@@ -358,8 +359,7 @@ impl event::EventHandler for MainState {
         }
         let speedup_calc = if self.play == PlayState::Play {
             ((time - self.start_time as u32).pow(2) as f32 * SPEEDUP) as u32
-        }
-        else {
+        } else {
             0
         };
         let param = graphics::DrawParam::new()
@@ -390,9 +390,8 @@ impl event::EventHandler for MainState {
                 &startmsg_display,
                 (startmsg_dest, 0.0, graphics::Color::new(0.0, 0.0, 1.0, 1.0)),
             )?;
-        }
-        else if self.play == PlayState::End {
-        //else start generating barriers on the screen
+        } else if self.play == PlayState::End {
+            //else start generating barriers on the screen
             //draw score
             let score_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 / 2.0);
             let score_str = format!("Score: {}", self.score);
