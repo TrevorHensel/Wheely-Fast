@@ -7,8 +7,8 @@
 - Brooks Russell    
     - bru2@pdx.edu
 
-For our term project, We are going to be creating a small racing game. Where
-the user(s) can race a small car around a race track. We would like the
+For our term project, We are going to be creating a small arcade racing game. Where
+the user can move a small car around a race track. We would like the
 game to use graphics, but we have no previous experience with grpahics so
 we are still unsure of exactly how we going to accomplish this goal in such
 a short amount of time. We will try our best to get a functioning game by
@@ -32,5 +32,10 @@ We used the GGEZ library for graphics.
 - https://github.com/ggez/ggez
 Their repository has a lot of useful examples and explinations on how to implement
 the code to make a game.
+    - We also used their examples to learn how to use GGEZ and so our code may
+        reflect that in its' final form. So we owe a lot of our understanding of
+        GGEZ to the examples they provided and we are citing them here because we
+        used many of their resources throughout the project in order to help us
+        learn how to make a simple game in GGEZ.
 
 [LICENSE](./LICENSE)
