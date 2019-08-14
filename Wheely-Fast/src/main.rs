@@ -40,7 +40,7 @@ const BARRIER_DISTANCE: i32 = -200;
 //Controls how fast the background and barriers speed up the further the player gets into the game
 const SPEEDUP: f32 = 0.000_002_5;
 
-//size of the game screen
+//Size of the game screen
 const SCREEN_SIZE: (f32, f32) = (
     GRID_SIZE.0 as f32 * GRID_CELL_SIZE.0 as f32,
     GRID_SIZE.1 as f32 * GRID_CELL_SIZE.1 as f32,
@@ -51,6 +51,8 @@ const SCREEN_SIZE: (f32, f32) = (
 const UPDATES_PER_SECOND: f32 = 16.0;
 const MS_PER_UPDATE: u64 = (1.0 / UPDATES_PER_SECOND * 1000.0) as u64;
 
+//This is a simple function which randomly generates a lane in which the 
+//next barrier should appear.
 //The barriers can not be generated in the same lane over and over again.
 pub fn get_lane(last: i16) -> (f32, i16) {
     let mut rng = rand::thread_rng();
@@ -77,6 +79,7 @@ struct GameImages {
     start_img: graphics::Image,
 }
 
+//Loading the images that the game uses when creating a new GameImages
 impl GameImages {
     fn new(ctx: &mut Context) -> GameResult<GameImages> {
         let car_image = graphics::Image::new(ctx, "/Car.png")?;
@@ -120,7 +123,7 @@ struct GridLocation {
 }
 
 impl GridLocation {
-    //used to create new grid location easier when updating the position and initalizing the position.
+    //Used to create new grid location easier when updating the position and initalizing the position.
     //I am not sure if we need the y-axis since we do not move up and down. We probably don't.
     pub fn new(x: i16, y: i16) -> Self {
         GridLocation { x, y }
@@ -301,6 +304,11 @@ impl event::EventHandler for MainState {
                 self.last_update = Instant::now();
 
                 //Collision Detection
+                //Not the best collision detection by far, if we had more time we would have
+                //implmented the barriers as actors instead of SpriteBatches in order to make
+                //collision detection much smoother than it currently is. However, it still
+                //works as intended and perfectly just with more of a performance hit than
+                //we would have liked.
                 let time_x =
                     (timer::duration_to_f64(timer::time_since_start(_ctx)) * 1000.0) as u32;
                 let speedup_calculation =
@@ -338,16 +346,16 @@ impl event::EventHandler for MainState {
         Ok(())
     }
 
-    //render the game
+    //Render the game
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         let pics = &mut self.pics;
-        //clear screen, can make the screens background a specific color here.
+        //Clear screen, can make the screens background a specific color here.
         graphics::clear(ctx, graphics::BLACK);
 
-        //current time in miliseconds
+        //Current time in miliseconds
         let time = (timer::duration_to_f64(timer::time_since_start(ctx)) * 1000.0) as u32;
 
-        //generates 150 road images and stiches them together to create a scrolling background effect so the user
+        //Generates 150 road images and stiches them together to create a scrolling background effect so the user
         //thinks the car is driving on a road
         for x in 0..150 {
             let p = graphics::DrawParam::new()
@@ -357,11 +365,13 @@ impl event::EventHandler for MainState {
                 .rotation(0.0);
             self.road.add(p);
         }
+        //Calculates how much to speed up the bacground in order to make the game more difficult
         let speedup_calc = if self.play == PlayState::Play {
             ((time - self.start_time as u32).pow(2) as f32 * SPEEDUP) as u32
         } else {
             0
         };
+        //Updates the position of the road in the background to give a scrolling effect.
         let param = graphics::DrawParam::new()
             .dest(Point2::new(
                 0.0,
@@ -374,7 +384,7 @@ impl event::EventHandler for MainState {
         graphics::draw(ctx, &self.road, param)?;
         self.road.clear();
 
-        //if the game isnt started display the start button
+        //If the game isnt started display the start button
         if self.play == PlayState::Start {
             let start_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 / 2.0);
             graphics::draw(
@@ -382,7 +392,7 @@ impl event::EventHandler for MainState {
                 &pics.start_img,
                 graphics::DrawParam::default().dest(start_dest),
             )?;
-            //draw exit instructions
+            //Draw exit instructions
             let startmsg_dest = Point2::new(SCREEN_SIZE.0 / 4.0, SCREEN_SIZE.1 * 0.7);
             let startmsg_display = graphics::Text::new(("Press return", pics.font, 20.0));
             graphics::draw(
@@ -391,8 +401,8 @@ impl event::EventHandler for MainState {
                 (startmsg_dest, 0.0, graphics::Color::new(0.0, 0.0, 1.0, 1.0)),
             )?;
         } else if self.play == PlayState::End {
-            //else start generating barriers on the screen
-            //draw score
+            //Else start generating barriers on the screen
+            //Draw score
             let score_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 / 2.0);
             let score_str = format!("Score: {}", self.score);
             let score_display = graphics::Text::new((score_str, pics.font, 34.0));
@@ -400,8 +410,8 @@ impl event::EventHandler for MainState {
                 ctx,
                 &score_display,
                 (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)),
-            )?; //red
-                //draw exit instructions
+            )?; //Red
+                //Draw exit instructions
             let exit_dest = Point2::new(SCREEN_SIZE.0 / 5.0, SCREEN_SIZE.1 * 0.6);
             let exit_display = graphics::Text::new(("Press esc to quit", pics.font, 18.0));
             graphics::draw(
@@ -423,7 +433,7 @@ impl event::EventHandler for MainState {
                 .offset(Point2::new(0.0, 0.0));
 
             graphics::draw(ctx, &self.barrier, param2)?;
-            //draw score
+            //Draw score
             let score_dest = Point2::new(SCREEN_SIZE.0 / 8.0, 16.0);
             let score_str = format!("Score: {}", self.score);
             let score_display = graphics::Text::new((score_str, pics.font, 30.0));
@@ -431,10 +441,10 @@ impl event::EventHandler for MainState {
                 ctx,
                 &score_display,
                 (score_dest, 0.0, graphics::Color::new(1.0, 0.0, 0.0, 1.0)),
-            )?; //red
+            )?; //Eed
         }
 
-        //draw car
+        //Draw car
         self.car.draw(ctx, pics)?;
 
         graphics::present(ctx)?;
@@ -452,35 +462,36 @@ impl event::EventHandler for MainState {
         _repeat: bool,
     ) {
         if let Some(dir) = Direction::from_keycode(keycode) {
-            // ensures direction is not changed  unless in play mode
-            // this way the car stays in place even if arrow key is pressed before return
+            //Ensures direction is not changed  unless in play mode
+            //This way the car stays in place even if arrow key is pressed before return
             if self.play == PlayState::Play {
-                //just make the direction for the next left or right input the same as
+                //Just make the direction for the next left or right input the same as
                 self.car.next_dir = Some(dir);
             }
         } else {
             match keycode {
                 KeyCode::Return => {
-                    // press return to start game
+                    //Press return to start game
                     if self.play == PlayState::Start {
                         self.play = PlayState::Play;
                         self.start_time = timer::time_since_start(_ctx).as_millis();
                     }
                 }
                 KeyCode::Escape => {
-                    // quit app by pressing escape key
+                    //Quit app by pressing escape key
                     if self.play == PlayState::Start || self.play == PlayState::End {
                         event::quit(_ctx);
                     } else {
                         self.play = PlayState::End;
                     }
                 }
-                _ => (), // do nothing
+                _ => (), //Do nothing
             }
         }
     }
 }
 
+//Main loop builds our scene and runs the apropriate scenes to make the game run.
 pub fn main() -> GameResult {
     let resource_dir = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
         let mut path = path::PathBuf::from(manifest_dir);
