@@ -26,7 +26,7 @@ left and right arrow keys to move the car.
 - Also recommened to use "cargo run --release" in order to run the game as we 
 noticed some games run better with the "--release" option.
 
-END GAME;
+END GAME:
 - If you want to end the game early press the esc key.
 - If you hit a barrier the game will end to exit hit the esc key.
 
