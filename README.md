@@ -22,7 +22,7 @@ on the road.
 
 DEMO:
 
-[Demo Video](Wheely_Fast_Demo.gif)
+![Demo Video](Wheely_Fast_Demo.gif)
 
 START GAME:
 - To start the game simply press enter on your keyboard and then begin using the 
