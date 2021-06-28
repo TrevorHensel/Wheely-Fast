@@ -20,7 +20,7 @@ If you hit a barrier the game ends and your score will pop up on the screen.
 The controls are very simple, you can move left or right depending where you are
 on the road.
 
-DEMO:
+DEMO (gif is slowed down):
 
 ![Demo Video](Wheely_Fast_Demo.gif)
 
